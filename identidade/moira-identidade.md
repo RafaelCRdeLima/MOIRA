@@ -62,9 +62,9 @@ logotipo.
 
 ## Ícones
 
-`moira-icones.svg` traz catorze ícones como `<symbol>` reutilizáveis:
+`moira-icones.svg` traz quinze ícones como `<symbol>` reutilizáveis:
 tensor, isometria, unitária, delta, vínculo, laço, MPS, MPO, PEPS, MERA,
-contrair, custo, cores, fórmula, exportar.
+contrair, ordem, cores, fórmula, exportar.
 
 Grade de 24 px, traço 1.5, pontas arredondadas, `stroke="currentColor"` — a cor
 vem do CSS do contexto e o modo escuro sai de graça.
