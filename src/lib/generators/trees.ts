@@ -5,7 +5,7 @@
  *  perna não existe: é ali que ficam as pernas físicas, livres por construção. */
 
 import type { Fragment } from './common';
-import { SITE_DX, centerFragment, emptyFragment, link, node } from './common';
+import { BOND_DIM, PHYS_DIM, SITE_DX, centerFragment, emptyFragment, link, node } from './common';
 import type { Leg } from '../model/types';
 
 const LAYER_H = 150;
@@ -18,6 +18,14 @@ const UP_LEFT = (-3 * Math.PI) / 4;
 const UP_RIGHT = -Math.PI / 4;
 const STRAIGHT_UP = -Math.PI / 2;
 const STRAIGHT_DOWN = Math.PI / 2;
+
+/** A dimensão do vínculo no nível `level`: juntar `arity` sítios multiplica o
+ *  espaço, então ela cresce como PHYS^(arity^level) até bater no teto χ. É
+ *  exatamente onde a rede passa a truncar, e a espessura da aresta mostra isso. */
+function levelDim(level: number, arity: number): number {
+  const exponent = arity ** Math.min(level, 5);
+  return exponent > 12 ? BOND_DIM : Math.min(BOND_DIM, PHYS_DIM ** exponent);
+}
 
 /** Posição horizontal do sítio `s` no nível `level`, com espaçamento dobrando
  *  a cada nível para que o pai caia no meio dos filhos. */
@@ -51,7 +59,13 @@ export function ttn(options: { leaves: number }): Fragment {
         siteX(level + 1, i, arity),
         -(level + 1) * LAYER_H,
         [...downAngles(arity), STRAIGHT_UP],
-        { shape: 'triangle', tags: ['ttn'], tip: arity, name: `w${level + 1}` },
+        {
+          shape: 'triangle',
+          tags: ['ttn'],
+          tip: arity,
+          name: `w${level + 1}`,
+          dims: [...new Array(arity).fill(levelDim(level, arity)), levelDim(level + 1, arity)],
+        },
       );
       for (let k = 0; k < arity; k++) {
         const below = pending[arity * i + k];
@@ -94,6 +108,7 @@ export function mera(options: { leaves: number; arity?: 2 | 3 }): Fragment {
         shape: 'square',
         tags: ['mera', 'desemaranhador'],
         name: `u${level + 1}`,
+        dims: new Array(4).fill(levelDim(level, arity)),
       });
       if (pending[left]) link(fragment, pending[left]!, u.legs[0]!);
       if (pending[right]) link(fragment, pending[right]!, u.legs[1]!);
@@ -111,7 +126,13 @@ export function mera(options: { leaves: number; arity?: 2 | 3 }): Fragment {
         siteX(level + 1, i, arity),
         baseY - ISO_DROP,
         [...downAngles(arity), STRAIGHT_UP],
-        { shape: 'triangle', tags: ['mera', 'isometria'], tip: arity, name: `w${level + 1}` },
+        {
+          shape: 'triangle',
+          tags: ['mera', 'isometria'],
+          tip: arity,
+          name: `w${level + 1}`,
+          dims: [...new Array(arity).fill(levelDim(level, arity)), levelDim(level + 1, arity)],
+        },
       );
       for (let k = 0; k < arity; k++) {
         const below = afterDis[arity * i + k];

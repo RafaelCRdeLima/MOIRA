@@ -1,7 +1,20 @@
 /** Cadeias: MPS, MPO e o sanduíche ⟨ψ|O|ψ⟩. */
 
 import type { Fragment } from './common';
-import { DOWN, LEFT, RIGHT, SITE_DX, UP, centerFragment, emptyFragment, link, node, siteName } from './common';
+import {
+  BOND_DIM,
+  DOWN,
+  LEFT,
+  PHYS_DIM,
+  RIGHT,
+  SITE_DX,
+  UP,
+  centerFragment,
+  emptyFragment,
+  link,
+  node,
+  siteName,
+} from './common';
 import type { Tensor } from '../model/types';
 
 export interface ChainOptions {
@@ -25,8 +38,9 @@ export function mps(options: ChainOptions, y = 0, physical = DOWN, name = 'A'): 
       ...(periodic || !last ? [RIGHT] : []),
       physical,
     ];
+    const dims = angles.map((a) => (a === physical ? PHYS_DIM : BOND_DIM));
     nodes.push(
-      node(fragment, i * SITE_DX, y, angles, { name: siteName(name, i), tags: ['mps'] }),
+      node(fragment, i * SITE_DX, y, angles, { name: siteName(name, i), tags: ['mps'], dims }),
     );
   }
 
@@ -55,8 +69,14 @@ export function mpo(options: ChainOptions, y = 0, name = 'W'): Fragment {
       UP,
       DOWN,
     ];
+    const dims = angles.map((a) => (a === UP || a === DOWN ? PHYS_DIM : BOND_DIM / 2));
     nodes.push(
-      node(fragment, i * SITE_DX, y, angles, { name: siteName(name, i), shape: 'square', tags: ['mpo'] }),
+      node(fragment, i * SITE_DX, y, angles, {
+        name: siteName(name, i),
+        shape: 'square',
+        tags: ['mpo'],
+        dims,
+      }),
     );
   }
 
@@ -113,6 +133,7 @@ export function transferChain(options: { sites: number; cell: number }): Fragmen
         name: siteName('T', i),
         shape: 'square',
         tags: inCell ? ['célula'] : ['repetição'],
+        dims: [BOND_DIM, BOND_DIM, PHYS_DIM, PHYS_DIM],
       }),
     );
   }

@@ -26,6 +26,9 @@ export interface NodeOptions {
   legLength?: number;
   /** Índice, dentro de `angles`, da perna para onde aponta a ponta do triângulo. */
   tip?: number;
+  /** Dimensão de cada perna, na mesma ordem dos ângulos. Sem isto a rede sai
+   *  sem espessura por dimensão, que é metade da linguagem visual. */
+  dims?: number[];
 }
 
 /** Cria um tensor com as pernas nos ângulos pedidos, na ordem dada — quem chama
@@ -37,11 +40,12 @@ export function node(
   angles: number[],
   options: NodeOptions = {},
 ): Tensor {
-  const legs: Leg[] = angles.map((angle) => ({
-    id: nextId('l'),
-    angle,
-    length: options.legLength ?? 26,
-  }));
+  const legs: Leg[] = angles.map((angle, i) => {
+    const leg: Leg = { id: nextId('l'), angle, length: options.legLength ?? 26 };
+    const dim = options.dims?.[i];
+    if (dim !== undefined) leg.dim = dim;
+    return leg;
+  });
   const tensor: Tensor = {
     id: nextId('t'),
     name: options.name ?? '',
@@ -59,9 +63,16 @@ export function node(
 
 export function link(fragment: Fragment, a: Leg, b: Leg, curvature = 0): Bond {
   const bond: Bond = { id: nextId('b'), a: a.id, b: b.id, curvature };
+  if (a.dim !== undefined && a.dim === b.dim) bond.dim = a.dim;
   fragment.bonds.push(bond);
   return bond;
 }
+
+/** Dimensões que os geradores usam quando o usuário não pediu outra coisa:
+ *  sítio físico de spin 1/2 e vínculo de tamanho moderado. Servem para que a
+ *  rede nasça já com espessura de aresta significando alguma coisa. */
+export const PHYS_DIM = 2;
+export const BOND_DIM = 16;
 
 export function emptyFragment(): Fragment {
   return { tensors: [], bonds: [] };

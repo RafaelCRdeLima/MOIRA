@@ -1,7 +1,19 @@
 /** Redes em grade: PEPS. */
 
 import type { Fragment } from './common';
-import { DOWN, LEFT, RIGHT, SITE_DX, UP, centerFragment, emptyFragment, link, node } from './common';
+import {
+  BOND_DIM,
+  DOWN,
+  LEFT,
+  PHYS_DIM,
+  RIGHT,
+  SITE_DX,
+  UP,
+  centerFragment,
+  emptyFragment,
+  link,
+  node,
+} from './common';
 import type { Leg, Tensor } from '../model/types';
 
 /** Perna física na diagonal, para não brigar com as quatro pernas de vínculo. */
@@ -27,6 +39,7 @@ export function peps(options: { rows: number; cols: number }): Fragment {
         name: `A${r + 1}${c + 1}`,
         tags: ['peps'],
         legLength: 22,
+        dims: angles.map((a) => (a === PHYSICAL ? PHYS_DIM : BOND_DIM / 4)),
       });
       const byAngle = new Map<number, Leg>();
       angles.forEach((angle, i) => byAngle.set(angle, tensor.legs[i]!));
