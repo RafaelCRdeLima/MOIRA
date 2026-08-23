@@ -100,11 +100,14 @@ export function sandwich(options: ChainOptions): Fragment {
   const op = mpo({ sites, periodic }, 0, 'W');
   const bra = mps({ sites, periodic }, -gap, DOWN, 'A');
 
+  // A tag que distingue vem primeiro: no modo por tag ela pinta o corpo, e a
+  // família fica no anel. Com 'mps' na frente, bra e ket saíam com o mesmo
+  // corpo e só o anel os separava.
   for (const tensor of bra.tensors) {
     tensor.conjugate = true;
-    tensor.tags = ['mps', 'bra'];
+    tensor.tags = ['bra', 'mps'];
   }
-  for (const tensor of ket.tensors) tensor.tags = ['mps', 'ket'];
+  for (const tensor of ket.tensors) tensor.tags = ['ket', 'mps'];
 
   const fragment: Fragment = {
     tensors: [...ket.tensors, ...op.tensors, ...bra.tensors],

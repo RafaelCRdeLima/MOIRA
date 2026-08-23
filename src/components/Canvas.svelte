@@ -423,7 +423,7 @@
               <circle class="orthocenter" r="17" />
             {/if}
             {#if selected}
-              <circle class="halo" r="19" />
+              <circle class="halo" r="16.5" />
             {/if}
             {#if ring}
               <!-- Segunda tag: anel fino em volta da forma. -->
@@ -561,11 +561,14 @@
     cursor: grab;
   }
 
+  /* Seleção é estado de interface e não pode competir com o diagrama, que é o
+     conteúdo. Com uma dúzia de tensores selecionados, o anel some de vista
+     individualmente e continua legível como conjunto. */
   .halo {
     fill: none;
-    stroke: var(--c-selection);
-    stroke-width: 1.5;
-    stroke-dasharray: 3 3;
+    stroke: color-mix(in srgb, var(--c-selection) 55%, transparent);
+    stroke-width: 1;
+    stroke-dasharray: 2 2.5;
   }
 
   .orthocenter {

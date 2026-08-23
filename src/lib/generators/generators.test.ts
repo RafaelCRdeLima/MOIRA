@@ -79,6 +79,13 @@ describe('cadeias', () => {
     expect(freeLegs(net)).toBe(0);
     expect(components(net)).toBe(1);
     expect(net.tensors.filter((t) => t.conjugate).length).toBe(6);
+
+    // A tag que distingue vem na frente: é ela que pinta o corpo no modo por
+    // tag, e a família 'mps' fica no anel.
+    const bra = net.tensors.filter((t) => t.conjugate);
+    const ket = net.tensors.filter((t) => t.tags.includes('ket'));
+    expect(bra.every((t) => t.tags[0] === 'bra' && t.tags[1] === 'mps')).toBe(true);
+    expect(ket.every((t) => t.tags[0] === 'ket' && t.tags[1] === 'mps')).toBe(true);
   });
 
   it('a rede de transferência marca a célula unitária por tag', () => {
