@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 400" width="480" height="400" role="img" aria-label="Conjunto de ícones MOIRA">
+  <title>Conjunto de ícones MOIRA</title>
+  <desc>Catorze ícones de interface desenhados em notação de rede tensorial, disponíveis como símbolos reutilizáveis.</desc>
+
+  <defs>
+    <g id="ic-base" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <symbol id="ic-tensor" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 8V3M15 14l4 4M9 14l-4 4"/>
+        <circle cx="12" cy="12" r="4"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-isometria" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 6v12l12-6z"/>
+        <path d="M5 9H2M5 15H2M17 12h5"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-unitaria" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <rect x="7" y="7" width="10" height="10" rx="1.5"/>
+        <path d="M7 10H2M7 14H2M17 10h5M17 14h5"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-delta" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 10V3M13.7 13l5.3 5.3M10.3 13L5 18.3"/>
+        <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-vinculo" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="12" r="3"/>
+        <path d="M9 12h6"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-laco" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="12" cy="15" r="3.2"/>
+        <path d="M9.6 13Q6 6 12 6t2.4 7"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-mps" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="4" cy="10" r="2"/><circle cx="10.7" cy="10" r="2"/>
+        <circle cx="17.3" cy="10" r="2"/><circle cx="24" cy="10" r="2"/>
+        <path d="M6 10h2.7M12.7 10h2.6M19.3 10h2.7"/>
+        <path d="M4 12v5M10.7 12v5M17.3 12v5"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-mpo" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+        <path d="M7 12h3M14 12h3"/>
+        <path d="M5 10V5M12 10V5M19 10V5M5 14v5M12 14v5M19 14v5"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-peps" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <path d="M6 6h12M6 12h12M6 18h12M6 6v12M12 6v12M18 6v12"/>
+        <circle cx="6" cy="6" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="6" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="6" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="6" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="6" cy="18" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="18" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="18" r="1.6" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-mera" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 4v3M12 7L6 12M12 7l6 5M6 12v3M18 12v3M6 15l-3 4M6 15l3 4M18 15l-3 4M18 15l3 4"/>
+        <circle cx="12" cy="7" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="6" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-contrair" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="5" cy="12" r="2.6"/>
+        <circle cx="12" cy="12" r="2.6"/>
+        <path d="M7.6 12h1.8"/>
+        <path d="M16 12h5M19 9.5l2.5 2.5L19 14.5"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-ordem" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M4 19V13M9.3 19V9M14.7 19v-6M20 19V5"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-cores" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="3.4" fill="currentColor" stroke="none"/>
+        <circle cx="16" cy="9" r="3.4"/>
+        <circle cx="11" cy="16" r="3.4" opacity="0.45" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-formula" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 5H5l6 7-6 7h9"/>
+        <path d="M18 9v6M21 12h-6"/>
+      </g>
+    </symbol>
+
+    <symbol id="ic-exportar" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 15V4M8.5 7.5L12 4l3.5 3.5"/>
+        <path d="M4 14v4a2 2 0 002 2h12a2 2 0 002-2v-4"/>
+      </g>
+    </symbol>
+  </defs>
+
+  <g color="#1B2430" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="10" fill="#5F5E5A">
+    <g transform="translate(24,24)"><use href="#ic-tensor" width="32" height="32"/><text x="16" y="46" text-anchor="middle">tensor</text></g>
+    <g transform="translate(104,24)"><use href="#ic-isometria" width="32" height="32"/><text x="16" y="46" text-anchor="middle">isometria</text></g>
+    <g transform="translate(184,24)"><use href="#ic-unitaria" width="32" height="32"/><text x="16" y="46" text-anchor="middle">unitária</text></g>
+    <g transform="translate(264,24)"><use href="#ic-delta" width="32" height="32"/><text x="16" y="46" text-anchor="middle">delta</text></g>
+    <g transform="translate(344,24)"><use href="#ic-vinculo" width="32" height="32"/><text x="16" y="46" text-anchor="middle">vínculo</text></g>
+
+    <g transform="translate(24,124)"><use href="#ic-laco" width="32" height="32"/><text x="16" y="46" text-anchor="middle">laço</text></g>
+    <g transform="translate(104,124)"><use href="#ic-mps" width="32" height="32"/><text x="16" y="46" text-anchor="middle">MPS</text></g>
+    <g transform="translate(184,124)"><use href="#ic-mpo" width="32" height="32"/><text x="16" y="46" text-anchor="middle">MPO</text></g>
+    <g transform="translate(264,124)"><use href="#ic-peps" width="32" height="32"/><text x="16" y="46" text-anchor="middle">PEPS</text></g>
+    <g transform="translate(344,124)"><use href="#ic-mera" width="32" height="32"/><text x="16" y="46" text-anchor="middle">MERA</text></g>
+
+    <g transform="translate(24,224)"><use href="#ic-contrair" width="32" height="32"/><text x="16" y="46" text-anchor="middle">contrair</text></g>
+    <g transform="translate(104,224)"><use href="#ic-ordem" width="32" height="32"/><text x="16" y="46" text-anchor="middle">custo</text></g>
+    <g transform="translate(184,224)"><use href="#ic-cores" width="32" height="32"/><text x="16" y="46" text-anchor="middle">cores</text></g>
+    <g transform="translate(264,224)"><use href="#ic-formula" width="32" height="32"/><text x="16" y="46" text-anchor="middle">fórmula</text></g>
+    <g transform="translate(344,224)"><use href="#ic-exportar" width="32" height="32"/><text x="16" y="46" text-anchor="middle">exportar</text></g>
+  </g>
+
+  <g transform="translate(24,320)">
+    <rect width="40" height="20" rx="4" fill="#1B2430"/>
+    <rect x="52" width="40" height="20" rx="4" fill="#AA3377"/>
+    <rect x="104" width="40" height="20" rx="4" fill="#4477AA"/>
+    <rect x="156" width="40" height="20" rx="4" fill="#228833"/>
+    <rect x="208" width="40" height="20" rx="4" fill="#CCBB44"/>
+    <rect x="260" width="40" height="20" rx="4" fill="#EE6677"/>
+    <rect x="312" width="40" height="20" rx="4" fill="#66CCEE"/>
+    <rect x="364" width="40" height="20" rx="4" fill="#BBBBBB"/>
+  </g>
+</svg>

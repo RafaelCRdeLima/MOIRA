@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Marca MOIRA">
+  <title>Marca MOIRA</title>
+  <desc>Um nó tensorial com três pernas de espessuras crescentes; a mais grossa termina num corte.</desc>
+  <rect width="128" height="128" rx="28" fill="#FFFFFF"/>
+  <g fill="none" stroke-linecap="round" transform="translate(64,64)">
+    <path d="M0 -14 Q-10 -32 0 -50" stroke="#4477AA" stroke-width="4"/>
+    <path d="M12 8 Q34 14 48 30" stroke="#AA3377" stroke-width="7.2"/>
+    <path d="M-12 8 Q-34 14 -48 30" stroke="#228833" stroke-width="11.2"/>
+    <path d="M-56 22 L-40 38" stroke="#228833" stroke-width="4.4"/>
+    <circle cx="0" cy="0" r="15" fill="#1B2430" stroke="none"/>
+  </g>
+</svg>
