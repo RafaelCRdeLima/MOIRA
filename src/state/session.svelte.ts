@@ -41,6 +41,9 @@ class Session {
   inspecting = $state<string | null>(null);
   /** Vínculo aberto no inspetor, quando não há tensor aberto. */
   inspectingBond = $state<string | null>(null);
+  /** Tensor sob o cursor, no canvas ou na faixa da equação. É o que liga um ao
+   *  outro: passar por um fator realça o nó, e passar pelo nó realça o fator. */
+  hovered = $state<string | null>(null);
   historyDepth = $state(0);
   redoDepth = $state(0);
 

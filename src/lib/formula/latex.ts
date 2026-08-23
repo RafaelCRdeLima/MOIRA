@@ -14,13 +14,25 @@ export interface FormulaOptions {
 
 export const DEFAULT_OPTIONS: FormulaOptions = { summation: 'explicit', conjugate: 'dagger' };
 
+export interface FormulaFactor {
+  tensorId: string;
+  name: string;
+  latex: string;
+}
+
 export interface Formula {
-  /** A expressão inteira, pronta para o KaTeX e para o botão de copiar. */
+  /** A expressão inteira, pronta para o botão de copiar. */
   latex: string;
   lhs: string;
   rhs: string;
   /** Símbolos somados, na ordem em que entram sob o Σ. */
   summed: string[];
+  /** `\\sum_{...}` quando a convenção é explícita, senão nulo. */
+  sum: string | null;
+  /** Um fator por tensor, em ordem de leitura. A faixa compõe cada um por si
+   *  para poder realçá-lo quando o cursor passa pelo nó correspondente — e é o
+   *  que torna a fórmula conferível fator a fator contra o desenho. */
+  factors: FormulaFactor[];
   /** Rede sem tensor algum não tem fórmula. */
   empty: boolean;
 }
@@ -35,22 +47,26 @@ export function buildFormula(
   options: FormulaOptions = DEFAULT_OPTIONS,
 ): Formula {
   if (network.tensors.length === 0) {
-    return { latex: '', lhs: '', rhs: '', summed: [], empty: true };
+    return { latex: '', lhs: '', rhs: '', summed: [], sum: null, factors: [], empty: true };
   }
 
   const lhs = buildLeftSide(assignment);
-  const factors = assignment.factors.map(({ tensor, name }) =>
-    buildFactor(tensor, name, assignment, options),
-  );
+  const factors: FormulaFactor[] = assignment.factors.map(({ tensor, name }) => ({
+    tensorId: tensor.id,
+    name,
+    latex: buildFactor(tensor, name, assignment, options),
+  }));
 
   const summed = assignment.summed.map((s) => s.symbol);
-  const product = factors.join('\\,');
-  const rhs =
+  const sum =
     options.summation === 'explicit' && summed.length > 0
-      ? `\\sum_{${joinIndices(summed)}} ${product}`
-      : product;
+      ? `\\sum_{${joinIndices(summed)}}`
+      : null;
 
-  return { latex: `${lhs} = ${rhs}`, lhs, rhs, summed, empty: false };
+  const product = factors.map((f) => f.latex).join('\\,');
+  const rhs = sum ? `${sum} ${product}` : product;
+
+  return { latex: `${lhs} = ${rhs}`, lhs, rhs, summed, sum, factors, empty: false };
 }
 
 /** Sem índices livres, o lado esquerdo é escalar. */

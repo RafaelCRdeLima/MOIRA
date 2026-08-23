@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { displayNames } from '../lib/formula/indices';
   import { t } from '../lib/i18n/index.svelte';
   import { bondMidpoint, bondPath, freeLegPath, legTip, shapeOutline, tipAngle } from '../lib/model/geometry';
   import { bondOfLeg } from '../lib/model/network';
@@ -40,6 +41,9 @@
   /** A rede é medida uma vez por quadro; cada tensor consulta o resultado em
    *  vez de varrer a rede inteira para descobrir o intervalo das rampas. */
   const style = $derived(computeStyle(network));
+  /** Tensor sem nome também aparece nomeado: é o mesmo nome que a faixa da
+   *  equação usa, e sem ele não há como conferir fator contra nó. */
+  const names = $derived(displayNames(network));
   const legend = $derived(buildLegend(network, style));
   /** Função à parte porque o estreitamento de união não sobrevive dentro de
    *  um $derived sobre uma variável mutável. */
@@ -362,6 +366,7 @@
         {@const selected = session.selection.includes(tensor.id)}
         {@const isCenter = network.orthogonalityCenter === tensor.id}
         {@const ring = tensorRing(network, style, tensor)}
+        {@const hovered = session.hovered === tensor.id}
         <g class="moira-tensor" class:selected>
           {#each tensor.legs as leg (leg.id)}
             {@const tip = legTip(tensor, leg)}
@@ -401,13 +406,18 @@
 
           <g
             class="moira-body"
+            class:hovered
             transform="translate({tensor.x} {tensor.y})"
             role="button"
             tabindex="0"
-            aria-label={tensorLabel(tensor.id, tensor.name)}
+            aria-label={tensorLabel(tensor.id, names.get(tensor.id) ?? '')}
             onpointerdown={(e) => onTensorPointerDown(e, tensor.id)}
             ondblclick={(e) => onTensorDoubleClick(e, tensor.id)}
             onkeydown={(e) => onTensorKeyDown(e, tensor.id)}
+            onpointerenter={() => (session.hovered = tensor.id)}
+            onpointerleave={() => session.hovered === tensor.id && (session.hovered = null)}
+            onfocus={() => (session.hovered = tensor.id)}
+            onblur={() => session.hovered === tensor.id && (session.hovered = null)}
           >
             {#if isCenter}
               <circle class="orthocenter" r="17" />
@@ -424,9 +434,9 @@
               d={shapeOutline(tensor.shape, tipAngle(tensor))}
               fill={tensorFill(network, style, tensor)}
             />
-            {#if tensor.name}
-              <text class="moira-name" x="0" y="-20">{tensor.name}{tensor.conjugate ? '†' : ''}</text>
-            {/if}
+            <text class="moira-name" class:auto={!tensor.name} x="0" y="-20">
+              {names.get(tensor.id)}{tensor.conjugate ? '†' : ''}
+            </text>
           </g>
         </g>
       {/each}
@@ -569,6 +579,22 @@
     font-size: 12px;
     text-anchor: middle;
     fill: var(--c-ink);
+    pointer-events: none;
+  }
+
+  /* Nome que o programa deu, e não o usuário: mais claro, para a diferença ser
+     visível sem que o nó fique anônimo. */
+  .moira-name.auto {
+    fill: var(--c-muted);
+  }
+
+  .moira-body.hovered .moira-shape {
+    stroke: var(--c-selection);
+    stroke-width: 2.6;
+  }
+
+  .moira-body.hovered .moira-name {
+    fill: var(--c-selection);
   }
 
   .rubber {

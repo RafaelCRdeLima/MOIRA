@@ -15,18 +15,28 @@ import {
 /** O KaTeX guarda a fonte LaTeX numa anotação MathML — é de lá que sai o que
  *  foi realmente composto, e não o texto desenhado. */
 async function latexNaTela(page) {
-  return page.evaluate(
-    () => document.querySelector('.expressao annotation[encoding="application/x-tex"]')?.textContent ?? '',
+  return page.evaluate(() =>
+    [...document.querySelectorAll('.expressao annotation[encoding="application/x-tex"]')]
+      .map((a) => a.textContent)
+      .join(' '),
   );
 }
 
-/** Conta quantas vezes cada índice aparece nos fatores, ignorando o somatório.
- *  Os subscritos têm chaves aninhadas (`_{\alpha_{1} \beta}`), então a
- *  extração casa as chaves em vez de confiar em expressão regular. */
-function contarIndices(latex) {
-  const produto = semSomatorio(latex);
+/** O LaTeX de cada fator, direto do pedaço que a faixa compôs para ele. */
+async function fatoresNaTela(page) {
+  return page.evaluate(() =>
+    [...document.querySelectorAll('.fator annotation[encoding="application/x-tex"]')].map(
+      (a) => a.textContent,
+    ),
+  );
+}
+
+/** Conta quantas vezes cada índice aparece nos fatores. Os subscritos têm
+ *  chaves aninhadas (`_{\alpha_{1} \beta}`), então a extração casa as chaves
+ *  em vez de confiar em expressão regular. */
+function contarIndices(fatores) {
   const contagem = new Map();
-  for (const fator of produto.split('\\,')) {
+  for (const fator of fatores) {
     const grupo = subscritoFinal(fator);
     if (grupo === null) continue;
     for (const simbolo of dividirIndices(grupo)) {
@@ -34,22 +44,6 @@ function contarIndices(latex) {
     }
   }
   return contagem;
-}
-
-/** Corta o `\\sum_{...}` da frente casando as chaves. Cortar no primeiro `} `
- *  não serve: a lista de mudos tem `\\alpha_{1} `, e o corte cairia no meio dela. */
-function semSomatorio(latex) {
-  const inicio = latex.indexOf('\\sum_{');
-  if (inicio === -1) return latex;
-  let profundidade = 0;
-  for (let i = inicio + 5; i < latex.length; i++) {
-    if (latex[i] === '{') profundidade += 1;
-    else if (latex[i] === '}') {
-      profundidade -= 1;
-      if (profundidade === 0) return latex.slice(i + 1).trim();
-    }
-  }
-  return latex;
 }
 
 /** O grupo `{...}` do primeiro `_` que esteja fora de qualquer chave. Procurar
@@ -113,7 +107,7 @@ export async function executar(navegador) {
     /A\^\{\[1\]\\dagger\}.*W\^\{\[1\]\}.*A\^\{\[1\]\}_/s.test(latex),
   );
 
-  const contagem = contarIndices(latex);
+  const contagem = contarIndices(await fatoresNaTela(page));
   relatorio.confere(
     'todo índice do sanduíche aparece exatamente duas vezes',
     [...contagem.values()].every((n) => n === 2),
@@ -128,10 +122,11 @@ export async function executar(navegador) {
   await arrastar(page, alvo, { x: alvo.x - 260, y: alvo.y + 40 }, 16);
   const depois = await latexNaTela(page);
 
-  const letras = (s) => new Set([...contarIndices(s).keys()]);
+  const letrasAntes = [...contagem.keys()].sort();
+  const letrasDepois = [...contarIndices(await fatoresNaTela(page)).keys()].sort();
   relatorio.confere(
     'mover um tensor não reembaralha as letras',
-    JSON.stringify([...letras(latex)].sort()) === JSON.stringify([...letras(depois)].sort()),
+    JSON.stringify(letrasAntes) === JSON.stringify(letrasDepois),
   );
   relatorio.confere('mas a fórmula acompanha o canvas', depois !== latex);
 
@@ -159,8 +154,7 @@ export async function executar(navegador) {
   await gerar(mera.page, 'MERA binária', { folhas: 16 });
   await mera.page.waitForTimeout(400);
 
-  const latexMera = await latexNaTela(mera.page);
-  const contagemMera = contarIndices(latexMera);
+  const contagemMera = contarIndices(await fatoresNaTela(mera.page));
   const somados = [...contagemMera.entries()].filter(([, n]) => n === 2);
   const livres = [...contagemMera.entries()].filter(([, n]) => n === 1);
   relatorio.confere(
@@ -176,7 +170,66 @@ export async function executar(navegador) {
 
   relatorio.semErros([...erros, ...mera.erros]);
   await mera.page.close();
+
+  await conferirLigacaoComOCanvas(navegador, relatorio);
   return relatorio;
+}
+
+/** A faixa só é conferível se der para casar fator com nó. Duas coisas provam
+ *  isso: todo tensor aparece nomeado no canvas, e o realce vai de um lado ao
+ *  outro. */
+async function conferirLigacaoComOCanvas(navegador, relatorio) {
+  const { page, erros } = await abrirPagina(navegador);
+
+  // Dois tensores criados à mão, sem nome nenhum — o caso que motivou isto.
+  const caixa = await page.locator('.surface').boundingBox();
+  await page.mouse.dblclick(caixa.x + 380, caixa.y + 220);
+  await page.mouse.dblclick(caixa.x + 620, caixa.y + 300);
+  await page.waitForTimeout(300);
+
+  const nomes = await page.evaluate(() =>
+    [...document.querySelectorAll('.moira-name')].map((t) => t.textContent.trim()),
+  );
+  relatorio.confere(
+    'tensor sem nome aparece nomeado no canvas',
+    nomes.length === 2 && nomes.every(Boolean),
+    nomes,
+  );
+
+  const naFormula = await page.evaluate(() =>
+    [...document.querySelectorAll('.fator')].map((f) => f.getAttribute('aria-label')),
+  );
+  relatorio.confere(
+    'e com o mesmo nome que a fórmula usa',
+    JSON.stringify([...nomes].sort()) === JSON.stringify([...naFormula].sort()),
+    { canvas: nomes, formula: naFormula },
+  );
+
+  // Cursor sobre o fator realça o nó.
+  await page.locator('.fator').first().hover();
+  await page.waitForTimeout(120);
+  relatorio.confere(
+    'cursor no fator realça o nó no diagrama',
+    (await page.locator('.moira-body.hovered').count()) === 1,
+  );
+
+  // Cursor sobre o nó realça o fator.
+  await page.locator('.surface').hover({ position: { x: 10, y: 10 } });
+  await page.locator('.moira-body').first().hover();
+  await page.waitForTimeout(120);
+  relatorio.confere(
+    'e cursor no nó realça o fator na faixa',
+    (await page.locator('.fator.realcado').count()) === 1,
+  );
+
+  // Legenda de uma entrada só, "sem tag", não aparece.
+  relatorio.confere(
+    'legenda com só "sem tag" não é desenhada',
+    (await page.locator('.moira-legend').count()) === 0,
+  );
+
+  relatorio.semErros(erros);
+  await page.close();
 }
 
 if (ehEntrada(import.meta.url)) await rodarSozinho(executar);

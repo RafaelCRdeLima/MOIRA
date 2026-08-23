@@ -187,6 +187,14 @@ export function orderedFactors(network: Network): { tensor: Tensor; name: string
     .map(({ tensor }) => ({ tensor, name: tensor.name || names.get(tensor.id)! }));
 }
 
+/** Nome que a fórmula e o canvas usam para cada tensor: o do usuário, ou a
+ *  letra automática. Os dois têm de mostrar o mesmo, senão a faixa da equação
+ *  nomeia tensores que o diagrama não nomeia e deixa de ser conferível. */
+export function displayNames(network: Network): Map<string, string> {
+  const automatic = automaticNames(network);
+  return new Map(network.tensors.map((t) => [t.id, t.name || automatic.get(t.id)!]));
+}
+
 function automaticNames(network: Network): Map<string, string> {
   const taken = new Set(network.tensors.map((t) => t.name).filter(Boolean));
   const unnamed = network.tensors
