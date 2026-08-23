@@ -1,33 +1,85 @@
-/** Português. As chaves são planas de propósito: no M1 entram en/fr/it como
- *  dicionários irmãos e o seletor de idioma troca o objeto inteiro. */
+/** Português. As chaves são planas de propósito: cada idioma é um dicionário
+ *  irmão com as mesmas chaves, e o seletor troca o objeto inteiro. */
 export const pt = {
-  'app.title': 'MOIRA',
   'app.tagline': 'editor de redes tensoriais em notação de Penrose',
 
   'tool.addTensor': 'Adicionar tensor',
-  'tool.delete': 'Apagar seleção',
+  'tool.delete': 'Apagar',
+  'tool.undo': 'Desfazer',
+  'tool.redo': 'Refazer',
+  'tool.copy': 'Copiar',
+  'tool.paste': 'Colar',
+  'tool.grid': 'Grade com encaixe',
+  'tool.generators': 'Geradores de rede',
+  'tool.language': 'Idioma',
+
+  'gen.title': 'Gerar rede',
+  'gen.mps': 'MPS',
+  'gen.mpo': 'MPO',
+  'gen.sandwich': 'Sanduíche ⟨ψ|O|ψ⟩',
+  'gen.peps': 'PEPS',
+  'gen.ttn': 'Árvore binária',
+  'gen.mera2': 'MERA binária',
+  'gen.mera3': 'MERA ternária',
+  'gen.transfer': 'Matriz de transferência',
+  'gen.sites': 'sítios',
+  'gen.rows': 'linhas',
+  'gen.cols': 'colunas',
+  'gen.leaves': 'folhas',
+  'gen.cell': 'célula unitária',
+  'gen.periodic': 'contorno periódico',
+  'gen.insert': 'Inserir',
+
+  'insp.title': 'Inspetor',
+  'insp.name': 'nome',
+  'insp.shape': 'forma',
+  'insp.tags': 'tags',
+  'insp.tagsHint': 'separadas por espaço',
+  'insp.conjugate': 'conjugado',
+  'insp.frozen': 'fixo',
+  'insp.orthocenter': 'centro de ortogonalidade',
+  'insp.legs': 'pernas',
+  'insp.dim': 'dim',
+  'insp.label': 'rótulo',
+  'insp.arrow': 'seta',
+  'insp.angle': 'ângulo',
+  'insp.length': 'comprimento',
+  'insp.tip': 'ponta',
+  'insp.bound': 'vinculada',
+  'insp.free': 'livre',
+  'insp.close': 'Fechar',
+  'insp.multiple': 'tensores selecionados',
+  'insp.bulkTags': 'Aplicar tags a todos',
+
+  'shape.circle': 'círculo',
+  'shape.square': 'quadrado',
+  'shape.triangle': 'triângulo',
+  'shape.dot': 'ponto',
+  'shape.diamond': 'losango',
+
+  'arrow.none': 'nenhuma',
+  'arrow.in': 'entra',
+  'arrow.out': 'sai',
 
   'canvas.label': 'Canvas da rede tensorial',
   'canvas.empty': 'Comece por uma MPS',
-  'canvas.emptyHint': 'Os geradores de rede chegam no M1. Por ora, adicione tensores e ligue as pernas.',
+  'canvas.emptyHint': 'Escolha um gerador ao lado, ou dê duplo clique no fundo para pôr um tensor.',
 
   'status.tensors': 'tensores',
   'status.bonds': 'vínculos',
   'status.free': 'pernas livres',
 
   'hint.title': 'Como usar',
-  'hint.add': 'Duplo clique no fundo adiciona um tensor.',
+  'hint.add': 'Duplo clique no fundo adiciona um tensor; duplo clique num tensor abre o inspetor.',
   'hint.drag': 'Arraste um tensor para movê-lo; arraste o fundo para deslocar a vista.',
+  'hint.rect': 'Arraste o fundo com Shift para selecionar por retângulo.',
   'hint.bond': 'Clique na ponta de uma perna livre e depois noutra para criar o vínculo.',
-  'hint.unbond': 'Clique num vínculo para desfazê-lo.',
-  'hint.delete': 'Delete apaga o que estiver selecionado.',
-  'hint.keys': 'Tab percorre os tensores; as setas movem a seleção.',
+  'hint.legDrag': 'Arraste a ponta de uma perna para mudar ângulo e comprimento.',
+  'hint.curve': 'Arraste o meio de um vínculo para curvá-lo; clique nele para desfazê-lo.',
+  'hint.keys': 'Ctrl+Z e Ctrl+Shift+Z desfazem e refazem; Ctrl+C e Ctrl+V copiam e colam.',
 
   'bond.pending': 'Vínculo pendente. Escolha a outra ponta, ou Esc para desistir.',
 } as const;
 
 export type StringKey = keyof typeof pt;
-
-export function t(key: StringKey): string {
-  return pt[key];
-}
+export type Dictionary = Record<StringKey, string>;
