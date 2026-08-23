@@ -15,9 +15,21 @@ sem telemetria — nenhum dado sai da máquina.
 
 ## Estado
 
-Em construção, no marco M0. A especificação de implementação está em
-[`docs/moira-spec.md`](docs/moira-spec.md) e a identidade visual, já fechada,
-em [`identidade/moira-identidade.md`](identidade/moira-identidade.md).
+Marco M0 concluído: esqueleto, tokens da identidade, modelo de dados, canvas
+SVG, arrasto, criação e remoção de tensores e vínculos, persistência local.
+A especificação de implementação está em [`docs/moira-spec.md`](docs/moira-spec.md)
+e a identidade visual, já fechada, em
+[`identidade/moira-identidade.md`](identidade/moira-identidade.md).
+
+## Desenvolvimento
+
+```sh
+npm install
+npm run dev      # servidor de desenvolvimento
+npm run build    # build estático em dist/
+npm test         # vitest sobre a lógica pura
+npm run check    # svelte-check
+```
 
 ## Referências
 
@@ -33,3 +45,14 @@ em [`identidade/moira-identidade.md`](identidade/moira-identidade.md).
 
 Toda dependência nova entra aqui com uma linha dizendo por que a alternativa
 manual não serve.
+
+- **Vite + TypeScript** — build estático e tipagem; exigidos pela especificação.
+- **Svelte 5** — só a camada de painéis e controles. O canvas é SVG escrito à
+  mão: o traçado das pernas e dos vínculos precisa de controle geométrico que
+  nenhuma biblioteca de grafos entrega.
+- **@fontsource/{instrument-serif, ibm-plex-sans, ibm-plex-mono}** — as três
+  faces da identidade servidas do próprio domínio. A alternativa manual seria
+  versionar os `.woff2` e escrever os `@font-face` à mão; o pacote faz isso com
+  os intervalos de Unicode certos e sem chamar CDN de fontes.
+- **vitest + jsdom** — testes da lógica pura (§14).
+- **svelte-check** — verificação de tipos dentro dos componentes.
