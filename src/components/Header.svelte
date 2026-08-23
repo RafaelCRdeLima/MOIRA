@@ -1,10 +1,23 @@
 <script lang="ts">
   import { i18n, LOCALES, t, type Locale } from '../lib/i18n/index.svelte';
+  import { theme, type ThemeMode } from '../state/theme.svelte';
+
+  const THEMES: ThemeMode[] = ['system', 'light', 'dark'];
 </script>
 
 <header>
-  <img class="logo" src="/assets/moira-logo.svg" alt="MOIRA" width="170" height="40" />
+  <img class="logo claro" src="/assets/moira-logo.svg" alt="MOIRA" width="170" height="40" />
+  <img class="logo escuro" src="/assets/moira-logo-dark.svg" alt="MOIRA" width="170" height="40" />
   <p class="tagline">{t('app.tagline')}</p>
+
+  <label class="lang tema">
+    <span class="sr">{t('theme.title')}</span>
+    <select value={theme.mode} onchange={(e) => theme.set(e.currentTarget.value as ThemeMode)}>
+      {#each THEMES as mode (mode)}
+        <option value={mode}>{t(`theme.${mode}`)}</option>
+      {/each}
+    </select>
+  </label>
 
   <label class="lang">
     <span class="sr">{t('tool.language')}</span>
@@ -33,12 +46,34 @@
     width: auto;
   }
 
+  /* Os dois arquivos da identidade, um por modo. O logotipo escuro traz o
+     próprio fundo #121821, então o cabeçalho usa esse mesmo fundo no escuro. */
+  .escuro {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .claro {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .escuro {
+    display: block;
+  }
+
+  :global(:root[data-theme='dark']) header {
+    background: var(--bg-dark);
+  }
+
   .tagline {
     margin: 0;
     color: var(--c-muted);
   }
 
   .lang {
+    margin-left: var(--step-2);
+  }
+
+  .tema {
     margin-left: auto;
   }
 

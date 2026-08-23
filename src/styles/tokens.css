@@ -48,10 +48,20 @@
   --panel-w: 264px;
 }
 
-/* Modo escuro: só as superfícies trocam no M0. O segundo par de paletas
-   cromáticas ajustado é do M2 — inverter as do modo claro as lava. */
+/* Modo escuro. As superfícies trocam, e as seis matizes cromáticas ganham um
+   segundo par de valores: as mesmas cores de Paul Tol clareadas em direção à
+   tinta clara. Não é a inversão do modo claro — invertidas, elas lavam. A
+   regra é uma só, então a paleta continua tendo uma fonte de verdade. */
 :root[data-theme='dark'] {
   --c-ink: var(--ink-dark);
   --c-paper: var(--bg-dark);
-  --c-panel: color-mix(in srgb, var(--c-ink) 6%, var(--c-paper));
+  --c-panel: color-mix(in srgb, var(--ink-dark) 6%, var(--bg-dark));
+
+  --purple: color-mix(in oklab, #aa3377 62%, var(--ink-dark));
+  --blue: color-mix(in oklab, #4477aa 60%, var(--ink-dark));
+  --green: color-mix(in oklab, #228833 58%, var(--ink-dark));
+  --amber: color-mix(in oklab, #ccbb44 78%, var(--ink-dark));
+  --red: color-mix(in oklab, #ee6677 82%, var(--ink-dark));
+  --cyan: color-mix(in oklab, #66ccee 84%, var(--ink-dark));
+  --grey: color-mix(in oklab, #bbbbbb 52%, var(--bg-dark));
 }
