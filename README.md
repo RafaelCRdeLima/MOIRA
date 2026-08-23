@@ -15,8 +15,11 @@ sem telemetria — nenhum dado sai da máquina.
 
 ## Estado
 
-Marco M0 concluído: esqueleto, tokens da identidade, modelo de dados, canvas
-SVG, arrasto, criação e remoção de tensores e vínculos, persistência local.
+Marco M1 concluído: além do esqueleto do M0 — tokens da identidade, modelo de
+dados, canvas SVG e persistência local — o editor tem inspetor, ângulos e
+curvatura editáveis, seleção múltipla, desfazer e refazer, copiar e colar,
+geradores de MPS, MPO, sanduíche, PEPS, árvore, MERA e matriz de transferência,
+e interface em português e inglês.
 A especificação de implementação está em [`docs/moira-spec.md`](docs/moira-spec.md)
 e a identidade visual, já fechada, em
 [`identidade/moira-identidade.md`](identidade/moira-identidade.md).

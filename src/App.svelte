@@ -3,9 +3,15 @@
   import Header from './components/Header.svelte';
   import Panel from './components/Panel.svelte';
   import Toolbar from './components/Toolbar.svelte';
+  import { i18n } from './lib/i18n/index.svelte';
   import { session } from './state/session.svelte';
 
   session.restore();
+
+  /** O idioma escolhido também governa o atributo lang do documento. */
+  $effect(() => {
+    document.documentElement.lang = i18n.locale === 'pt' ? 'pt-BR' : 'en';
+  });
 
   /** Recarregar logo depois de um arrasto não pode perder o último movimento. */
   $effect(() => {
