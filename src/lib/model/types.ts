@@ -31,6 +31,8 @@ export interface Tensor {
   isometryTip?: string;
   conjugate?: boolean;
   frozen?: boolean;
+  /** Cor manual, em CSS. Sobrepõe qualquer modo de coloração (§7, modo 5). */
+  color?: string;
 }
 
 export interface Bond {
@@ -50,6 +52,10 @@ export interface Network {
   bonds: Bond[];
   orthogonalityCenter?: string;
   colorMode: ColorMode;
+  /** Legenda automática do modo ativo. Desligável, ligada por padrão. */
+  showLegend?: boolean;
+  /** Colorir as arestas por `Bond.value` numa rampa sequencial. */
+  edgeColorByValue?: boolean;
   meta: { title: string; created: string; version: number };
 }
 

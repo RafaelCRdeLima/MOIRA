@@ -72,6 +72,9 @@ export function parseNetwork(input: unknown): Network | undefined {
     },
   };
 
+  if (doc['showLegend'] === false) network.showLegend = false;
+  if (doc['edgeColorByValue'] === true) network.edgeColorByValue = true;
+
   const center = str(doc['orthogonalityCenter']);
   if (center && tensors.some((t) => t.id === center)) network.orthogonalityCenter = center;
 
@@ -107,6 +110,8 @@ function parseTensor(raw: unknown): Tensor | undefined {
   if (tip && legs.some((l) => l.id === tip)) tensor.isometryTip = tip;
   if (raw['conjugate'] === true) tensor.conjugate = true;
   if (raw['frozen'] === true) tensor.frozen = true;
+  const color = str(raw['color']);
+  if (color) tensor.color = color;
   return tensor;
 }
 
