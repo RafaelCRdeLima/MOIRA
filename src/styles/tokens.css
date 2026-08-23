@@ -1,0 +1,57 @@
+/* Tokens da identidade MOIRA. Ver identidade/moira-identidade.md.
+   Nenhum hex solto em componente: tudo sai daqui. */
+
+:root {
+  /* Paleta bright de Paul Tol, segura para daltonismo. */
+  --purple: #aa3377;
+  --blue: #4477aa;
+  --green: #228833;
+  --amber: #ccbb44;
+  --red: #ee6677;
+  --cyan: #66ccee;
+  --grey: #bbbbbb;
+
+  /* Superfícies. */
+  --ink: #1b2430;
+  --paper: #ffffff;
+  --ink-dark: #f2f0ec;
+  --bg-dark: #121821;
+
+  /* Papéis semânticos. Componentes usam estes, não a paleta crua. */
+  --c-ink: var(--ink);
+  --c-paper: var(--paper);
+  --c-isometry: var(--blue);
+  --c-unitary: var(--green);
+  --c-orthocenter: var(--amber);
+  --c-warning: var(--red);
+  --c-generic: var(--grey);
+
+  /* Derivados de superfície, em opacidade sobre a tinta para valerem nos dois modos. */
+  --c-panel: color-mix(in srgb, var(--c-ink) 3%, var(--c-paper));
+  --c-rule: color-mix(in srgb, var(--c-ink) 14%, transparent);
+  --c-muted: color-mix(in srgb, var(--c-ink) 55%, transparent);
+  --c-hover: color-mix(in srgb, var(--c-ink) 7%, transparent);
+  --c-selection: var(--purple);
+
+  --font-mark: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-ui: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --step-1: 4px;
+  --step-2: 8px;
+  --step-3: 12px;
+  --step-4: 16px;
+  --step-5: 24px;
+
+  --radius: 5px;
+  --header-h: 52px;
+  --panel-w: 264px;
+}
+
+/* Modo escuro: só as superfícies trocam no M0. O segundo par de paletas
+   cromáticas ajustado é do M2 — inverter as do modo claro as lava. */
+:root[data-theme='dark'] {
+  --c-ink: var(--ink-dark);
+  --c-paper: var(--bg-dark);
+  --c-panel: color-mix(in srgb, var(--c-ink) 6%, var(--c-paper));
+}
