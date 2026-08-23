@@ -117,7 +117,7 @@ export async function executar(navegador) {
   // ── estabilidade das letras ──────────────────────────────────────────────
   // A rede recém-gerada vem inteira selecionada, e arrastar um tensor de dentro
   // de uma seleção move o bloco todo — o que não mudaria ordem nenhuma.
-  await page.locator('.surface').click({ position: { x: 40, y: 640 } });
+  await page.locator('.surface').click({ position: { x: 40, y: 20 } });
   const alvo = await centroDe(page, '.moira-tensor:nth-child(3) .moira-body');
   await arrastar(page, alvo, { x: alvo.x - 260, y: alvo.y + 40 }, 16);
   const depois = await latexNaTela(page);

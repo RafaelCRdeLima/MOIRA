@@ -35,7 +35,12 @@ export async function executar(navegador) {
   const em = (x, y) => ({ x: caixa.x + x, y: caixa.y + y });
 
   await page.keyboard.down('Shift');
-  await arrastar(page, em(120, 380), em(430, 780), 12);
+  await arrastar(
+    page,
+    em(caixa.width * 0.06, caixa.height * 0.45),
+    em(caixa.width * 0.32, caixa.height * 0.99),
+    12,
+  );
   await page.keyboard.up('Shift');
 
   const selecionados = await page.evaluate(
@@ -61,7 +66,7 @@ export async function executar(navegador) {
   );
 
   // ── desfazer, refazer, copiar e colar ────────────────────────────────────
-  await page.locator('.surface').click({ position: { x: 900, y: 60 } });
+  await page.locator('.surface').click({ position: { x: caixa.width * 0.9, y: 30 } });
   await page.keyboard.press('Control+z');
   await page.waitForTimeout(250);
   const aposDesfazer = await contadores(page);
@@ -158,7 +163,7 @@ async function conferirGestos(page, relatorio) {
     inspecionado?.shape,
   );
 
-  await page.locator('.surface').click({ position: { x: 900, y: 60 } });
+  await page.locator('.surface').click({ position: { x: 40, y: 20 } });
   await page.keyboard.press('Control+z');
   await page.keyboard.press('Control+z');
   await page.waitForTimeout(300);

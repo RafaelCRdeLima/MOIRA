@@ -280,6 +280,14 @@ geração de código: a notação gráfica só vale porque é equivalente à not
 Botão de copiar LaTeX puro, e opção de incluir a fórmula como legenda na
 exportação SVG/TikZ.
 
+A ordem dos fatores segue a ordem de leitura do canvas — faixas horizontais de
+cima para baixo, cada faixa da esquerda para a direita. Num sanduíche isso põe a
+bra antes do operador e do ket, e o produto sai `∑ A† W A`. Consequência aceita:
+reorganizar o canvas por motivo estético reordena os fatores e, portanto, os
+argumentos no código gerado. Não muda valor nenhum — a soma é a mesma — mas quem
+versionar o código gerado verá diff sem mudança matemática. É comportamento
+esperado, não defeito: o diagrama manda.
+
 Caminho inverso, se couber no M4: colar uma string `einsum` ou expressão de
 índices e receber o diagrama montado. Barato perto do resto, e resolve o caso de
 quem já tem o código e quer a figura.
@@ -375,8 +383,18 @@ vezes mais caro para corrigir.
 **M4 — publicação.** Exportação SVG/TikZ/PNG/JSON e a animação da ordem de contração.
 *Aceite:* o TikZ exportado compila em `pdflatex` sem edição manual.
 
+Decisão a tomar no M4: a **forma compacta da fórmula**. O sanduíche de 4 sítios
+cabe numa linha; a MERA de 16 folhas tem 26 fatores e não cabe em página nenhuma
+escrita em produto explícito. A exportação vai precisar de notação de produto
+sobre sítios, de quebra em múltiplas linhas, ou das duas. Fica registrado aqui
+para não ser descoberto durante o marco.
+
 **M5 — lançamento.** Tutorial, deploy no Cloudflare Pages, README creditando
 Penrose pela notação e as referências de escopo.
+
+Pendência da camada B do §14.1 herdada do M3b: o `quimb` não estava instalado
+quando o script rodou, então o dialeto dele ainda não foi conferido contra os
+outros. O `ncon` está. Resolver antes do lançamento.
 
 ## 14. Testes
 

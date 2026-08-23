@@ -15,16 +15,23 @@ sem telemetria — nenhum dado sai da máquina.
 
 ## Estado
 
-Marco M3a concluído. O editor desenha e edita redes tensoriais — inspetor,
+Marco M3b concluído. O editor desenha e edita redes tensoriais — inspetor,
 ângulos e curvatura, seleção múltipla, desfazer e refazer, copiar e colar,
 geradores de MPS, MPO, sanduíche, PEPS, árvore, MERA e matriz de transferência —
 tem a linguagem visual completa (cinco formas, cinco modos de coloração,
 espessura de aresta proporcional a log(D), arestas coloridas por valor, legenda
-automática, modo escuro) e exibe ao vivo, em KaTeX, a equação em notação de
-índices que o diagrama representa. Interface em português e inglês.
+automática, modo escuro), exibe ao vivo em KaTeX a equação em notação de índices
+que o diagrama representa, determina a ordem de contração com o custo e o
+escalonamento em χ, e gera o código nas quatro convenções — `ncon` (MATLAB e
+Julia), `numpy.einsum`/`opt_einsum`, `quimb` e `ITensor`. Interface em português
+e inglês.
 
-O que falta: ordem de contração, custo e geração de código (M3b), exportação e a
-animação da ordem de contração (M4), tutorial e publicação (M5).
+O que falta: exportação SVG/TikZ/PNG/JSON e a animação da ordem de contração
+(M4), tutorial e publicação (M5).
+
+A validação numérica tem duas camadas (§14.1): a de dentro do `npm test`
+contrai cada rede pela ordem escolhida e compara com a força bruta; a de fora,
+em [`scripts/`](scripts/), confere a convenção do `ncon` contra o `numpy`.
 A especificação de implementação está em [`docs/moira-spec.md`](docs/moira-spec.md)
 e a identidade visual, já fechada, em
 [`identidade/moira-identidade.md`](identidade/moira-identidade.md).

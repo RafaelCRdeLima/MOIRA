@@ -1,9 +1,11 @@
 <script lang="ts">
   import Canvas from './components/Canvas.svelte';
+  import ContractionDrawer from './components/ContractionDrawer.svelte';
   import FormulaBand from './components/FormulaBand.svelte';
   import Header from './components/Header.svelte';
   import Panel from './components/Panel.svelte';
   import Toolbar from './components/Toolbar.svelte';
+  import ValidationStrip from './components/ValidationStrip.svelte';
   import { i18n } from './lib/i18n/index.svelte';
   import { session } from './state/session.svelte';
   import { theme } from './state/theme.svelte';
@@ -45,7 +47,13 @@
 <Toolbar />
 <FormulaBand />
 <main>
-  <div class="stage"><Canvas /></div>
+  <div class="coluna">
+    <div class="stage">
+      <Canvas />
+      <ValidationStrip />
+    </div>
+    <ContractionDrawer />
+  </div>
   <Panel />
 </main>
 
@@ -62,10 +70,18 @@
     min-height: 0;
   }
 
+  .coluna {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+  }
+
   .stage {
     position: relative;
     flex: 1;
-    min-width: 0;
+    min-height: 0;
     overflow: hidden;
   }
 </style>

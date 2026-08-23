@@ -19,8 +19,10 @@ export async function executar(navegador) {
   const ponta = (cx, cy, i) =>
     em(cx + Math.cos(direcao(i)) * PONTA, cy + Math.sin(direcao(i)) * PONTA);
 
-  const xs = [140, 300, 460, 620, 780];
-  const y = 380;
+  // Frações da caixa do canvas: ela mudou de altura quando a gaveta do M3b
+  // entrou, e coordenada fixa passa a cair fora.
+  const xs = [0.12, 0.27, 0.42, 0.57, 0.72].map((f) => caixa.width * f);
+  const y = caixa.height * 0.35;
   for (const x of xs) {
     const p = em(x, y);
     await page.mouse.dblclick(p.x, p.y);
