@@ -55,45 +55,69 @@ export function freeLegPath(tensor: Tensor, leg: Leg): string {
   return `M${round(a.x)} ${round(a.y)}L${round(b.x)} ${round(b.y)}`;
 }
 
-/** Vínculo: cúbica de borda a borda, com as pontas das pernas como pontos de
- *  controle. Assim o ângulo e o comprimento de cada perna viram a tangente da
- *  curva em cada extremidade, e um vínculo de um tensor consigo mesmo (traço
- *  parcial) sai como laço sem nenhum caso especial. */
-export function bondPath(network: Network, bond: Bond): string | undefined {
+/** Pontos de controle da cúbica de um vínculo: das bordas das duas formas, com
+ *  as pontas das pernas como controles, deslocados pela curvatura.
+ *
+ *  Fonte única de propósito. Antes, `bondPath` e `bondMidpoint` montavam a
+ *  curva cada um por conta própria e só o primeiro aplicava a curvatura — a
+ *  alça de arrasto se descolava da linha assim que o vínculo era curvado. Duas
+ *  contas para a mesma curva sempre acabam discordando; o M4 vai exportar estas
+ *  curvas e precisa que a conta seja uma só. */
+export function bondCurve(
+  network: Network,
+  bond: Bond,
+): { p0: Point; c1: Point; c2: Point; p3: Point } | undefined {
   const ends = bondEnds(network, bond);
   if (!ends) return undefined;
+
   const p0 = legBase(ends.from.tensor, ends.from.leg);
   const p3 = legBase(ends.to.tensor, ends.to.leg);
   let c1 = legTip(ends.from.tensor, ends.from.leg);
   let c2 = legTip(ends.to.tensor, ends.to.leg);
 
   if (bond.curvature !== 0) {
-    const dx = p3.x - p0.x;
-    const dy = p3.y - p0.y;
-    const chord = Math.hypot(dx, dy);
-    // Num laço a corda é curta demais para dar escala à curvatura; o piso evita
-    // que arrastar o ponto médio de um laço não produza efeito nenhum.
-    const scale = bond.curvature * Math.max(chord, 48);
-    const nx = chord > 1e-6 ? -dy / chord : 0;
-    const ny = chord > 1e-6 ? dx / chord : -1;
+    const { nx, ny, scale } = curvatureFrame(p0, p3, bond.curvature);
     c1 = { x: c1.x + nx * scale, y: c1.y + ny * scale };
     c2 = { x: c2.x + nx * scale, y: c2.y + ny * scale };
   }
 
+  return { p0, c1, c2, p3 };
+}
+
+/** Normal à corda e escala da curvatura. Num laço a corda é curta demais para
+ *  dar escala; o piso evita que arrastar o meio de um laço não produza efeito. */
+function curvatureFrame(p0: Point, p3: Point, curvature: number) {
+  const dx = p3.x - p0.x;
+  const dy = p3.y - p0.y;
+  const chord = Math.hypot(dx, dy);
+  return {
+    nx: chord > 1e-6 ? -dy / chord : 0,
+    ny: chord > 1e-6 ? dx / chord : -1,
+    scale: curvature * Math.max(chord, 48),
+    chord,
+  };
+}
+
+/** Vínculo: cúbica de borda a borda, com as pontas das pernas como pontos de
+ *  controle. Assim o ângulo e o comprimento de cada perna viram a tangente da
+ *  curva em cada extremidade, e um vínculo de um tensor consigo mesmo (traço
+ *  parcial) sai como laço sem nenhum caso especial. */
+export function bondPath(network: Network, bond: Bond): string | undefined {
+  const curve = bondCurve(network, bond);
+  if (!curve) return undefined;
+  const { p0, c1, c2, p3 } = curve;
   return (
     `M${round(p0.x)} ${round(p0.y)}` +
     `C${round(c1.x)} ${round(c1.y)},${round(c2.x)} ${round(c2.y)},${round(p3.x)} ${round(p3.y)}`
   );
 }
 
-/** Ponto médio da curva do vínculo (t = 0.5), onde fica a alça de curvatura. */
+/** Ponto da curva em t = 0,5, onde fica a alça de curvatura — da curva de
+ *  verdade, curvatura incluída. */
 export function bondMidpoint(network: Network, bond: Bond): Point | undefined {
-  const ends = bondEnds(network, bond);
-  if (!ends) return undefined;
-  const p0 = legBase(ends.from.tensor, ends.from.leg);
-  const p3 = legBase(ends.to.tensor, ends.to.leg);
-  const c1 = legTip(ends.from.tensor, ends.from.leg);
-  const c2 = legTip(ends.to.tensor, ends.to.leg);
+  const curve = bondCurve(network, bond);
+  if (!curve) return undefined;
+  const { p0, c1, c2, p3 } = curve;
   return {
     x: (p0.x + 3 * c1.x + 3 * c2.x + p3.x) / 8,
     y: (p0.y + 3 * c1.y + 3 * c2.y + p3.y) / 8,
@@ -149,20 +173,15 @@ export function legGeometryFor(tensor: Tensor, point: Point): { angle: number; l
 }
 
 /** Curvatura que leva o meio da curva até o ponto dado. Inverte a conta de
- *  `bondPath`: o meio se desloca 3/4 do deslocamento aplicado aos controles. */
+ *  `bondCurve`: deslocar os dois controles de `s` move o meio em 3/4 de `s`. */
 export function curvatureFor(network: Network, bond: Bond, point: Point): number {
-  const ends = bondEnds(network, bond);
-  if (!ends) return bond.curvature;
-  const p0 = legBase(ends.from.tensor, ends.from.leg);
-  const p3 = legBase(ends.to.tensor, ends.to.leg);
-  const c1 = legTip(ends.from.tensor, ends.from.leg);
-  const c2 = legTip(ends.to.tensor, ends.to.leg);
+  // Referência sem curvatura: é dela que o deslocamento é medido.
+  const reta = bondCurve(network, { ...bond, curvature: 0 });
+  if (!reta) return bond.curvature;
+  const { p0, c1, c2, p3 } = reta;
 
-  const dx = p3.x - p0.x;
-  const dy = p3.y - p0.y;
-  const chord = Math.hypot(dx, dy);
-  const nx = chord > 1e-6 ? -dy / chord : 0;
-  const ny = chord > 1e-6 ? dx / chord : -1;
+  const { nx, ny } = curvatureFrame(p0, p3, 1);
+  const chord = Math.hypot(p3.x - p0.x, p3.y - p0.y);
 
   const midX = (p0.x + 3 * c1.x + 3 * c2.x + p3.x) / 8;
   const midY = (p0.y + 3 * c1.y + 3 * c2.y + p3.y) / 8;
