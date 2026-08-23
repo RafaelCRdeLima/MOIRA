@@ -1,6 +1,8 @@
 <script lang="ts">
   import { t } from '../lib/i18n/index.svelte';
   import { session } from '../state/session.svelte';
+  import BondInspector from './BondInspector.svelte';
+  import ColorPanel from './ColorPanel.svelte';
   import Generators from './Generators.svelte';
   import Inspector from './Inspector.svelte';
 
@@ -8,6 +10,7 @@
   const bondCount = $derived(session.network.bonds.length);
   const freeCount = $derived(session.freeLegCount());
   const inspecting = $derived(session.tensor(session.inspecting) !== undefined);
+  const inspectingBond = $derived(session.bond(session.inspectingBond) !== undefined);
 
   let bulkTags = $state('');
 </script>
@@ -21,6 +24,8 @@
 
   {#if inspecting}
     <Inspector />
+  {:else if inspectingBond}
+    <BondInspector />
   {:else}
     {#if session.selection.length > 1}
       <section class="bulk">
@@ -37,6 +42,8 @@
         <p class="hint">{t('insp.bulkTags')}</p>
       </section>
     {/if}
+
+    <ColorPanel />
 
     <Generators />
 

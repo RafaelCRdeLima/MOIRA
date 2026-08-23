@@ -58,6 +58,25 @@
       />
     </label>
 
+    <label class="row">
+      <span>{t('insp.color')}</span>
+      <span class="cor">
+        <input
+          type="color"
+          value={tensor.color ?? '#bbbbbb'}
+          onchange={(e) => session.setTensorColor(tensor.id, e.currentTarget.value)}
+        />
+        <button
+          type="button"
+          class="limpar"
+          disabled={!tensor.color}
+          onclick={() => session.setTensorColor(tensor.id, undefined)}
+        >
+          {t('insp.clearColor')}
+        </button>
+      </span>
+    </label>
+
     <label class="check">
       <input
         type="checkbox"
@@ -249,6 +268,37 @@
 
   .mono {
     font-family: var(--font-mono);
+  }
+
+  .cor {
+    display: flex;
+    align-items: center;
+    gap: var(--step-2);
+    width: 148px;
+  }
+
+  .cor input[type='color'] {
+    width: 32px;
+    height: 24px;
+    padding: 1px;
+  }
+
+  .limpar {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--c-muted);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .limpar:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .limpar:hover:not(:disabled) {
+    color: var(--c-ink);
   }
 
   table {

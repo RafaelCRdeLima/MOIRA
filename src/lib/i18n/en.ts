@@ -78,5 +78,37 @@ export const en: Dictionary = {
   'hint.curve': 'Drag the middle of a bond to curve it; click it to undo the bond.',
   'hint.keys': 'Ctrl+Z and Ctrl+Shift+Z undo and redo; Ctrl+C and Ctrl+V copy and paste.',
 
+  'color.title': 'Colour',
+  'color.tag': 'by tag',
+  'color.role': 'by role',
+  'color.layer': 'by layer',
+  'color.degree': 'by degree',
+  'color.manual': 'manual',
+  'color.legend': 'legend',
+  'color.byValue': 'edges by value',
+
+  'role.generic': 'generic',
+  'role.isometry': 'isometry',
+  'role.unitary': 'unitary',
+  'role.delta': 'delta',
+  'role.orthocenter': 'orthogonality centre',
+
+  'legend.untagged': 'untagged',
+  'legend.others': 'others',
+  'legend.bottom': 'bottom',
+  'legend.top': 'top',
+  'legend.bondValue': 'bond value',
+
+  'theme.title': 'Theme',
+  'theme.light': 'light',
+  'theme.dark': 'dark',
+  'theme.system': 'system',
+
+  'insp.color': 'colour',
+  'insp.clearColor': 'no manual colour',
+  'insp.bond': 'Bond',
+  'insp.value': 'value',
+  'insp.curvature': 'curvature',
+
   'bond.pending': 'Bond pending. Pick the other end, or Esc to drop it.',
 };

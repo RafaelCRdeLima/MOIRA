@@ -5,8 +5,24 @@
   import Toolbar from './components/Toolbar.svelte';
   import { i18n } from './lib/i18n/index.svelte';
   import { session } from './state/session.svelte';
+  import { theme } from './state/theme.svelte';
 
   session.restore();
+  theme.apply();
+
+  /** Sessão retomada sem vista gravada — arquivo importado, ou primeira visita
+   *  depois de uma versão antiga: enquadra, para a rede não nascer fora da tela. */
+  $effect(() => {
+    if (session.viewRestored || session.network.tensors.length === 0) return;
+    const stage = document.querySelector<HTMLElement>('.stage');
+    if (stage) {
+      session.fitTo({ w: stage.clientWidth, h: stage.clientHeight });
+      session.viewRestored = true;
+    }
+  });
+
+  /** Enquanto o tema for o do sistema, seguir a troca feita nele. */
+  $effect(() => theme.watchSystem());
 
   /** O idioma escolhido também governa o atributo lang do documento. */
   $effect(() => {

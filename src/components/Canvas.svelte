@@ -2,7 +2,17 @@
   import { t } from '../lib/i18n/index.svelte';
   import { bondMidpoint, bondPath, freeLegPath, legTip, shapeOutline, tipAngle } from '../lib/model/geometry';
   import { bondOfLeg } from '../lib/model/network';
+  import { buildLegend } from '../lib/render/legend';
+  import {
+    bondStroke,
+    bondWidth,
+    computeStyle,
+    legWidth,
+    tensorFill,
+    tensorRing,
+  } from '../lib/render/style';
   import { session } from '../state/session.svelte';
+  import Legend from './Legend.svelte';
 
   const NUDGE = 4;
   const NUDGE_FINE = 1;
@@ -27,6 +37,10 @@
 
   const network = $derived(session.network);
   const isEmpty = $derived(network.tensors.length === 0);
+  /** A rede é medida uma vez por quadro; cada tensor consulta o resultado em
+   *  vez de varrer a rede inteira para descobrir o intervalo das rampas. */
+  const style = $derived(computeStyle(network));
+  const legend = $derived(buildLegend(network, style));
   /** Função à parte porque o estreitamento de união não sobrevive dentro de
    *  um $derived sobre uma variável mutável. */
   function asRect(g: Gesture | null): Extract<Gesture, { kind: 'rect' }> | null {
@@ -106,6 +120,7 @@
         gesture.lastX = event.clientX;
         gesture.lastY = event.clientY;
         session.view = { ...session.view, x: session.view.x + dx, y: session.view.y + dy };
+        session.touchView();
         break;
       }
       case 'rect': {
@@ -187,6 +202,7 @@
     const scale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, session.view.scale * Math.exp(-event.deltaY * 0.0015)));
     const k = scale / session.view.scale;
     session.view = { scale, x: px - (px - session.view.x) * k, y: py - (py - session.view.y) * k };
+    session.touchView();
   }
 
   function onKeyDown(event: KeyboardEvent) {
@@ -300,7 +316,12 @@
           {#if d}
             {@const mid = bondMidpoint(network, bond)}
             <g class="bond-group">
-              <path class="moira-bond" {d} />
+              <path
+                class="moira-bond"
+                {d}
+                stroke={bondStroke(network, style, bond)}
+                stroke-width={bondWidth(network, bond)}
+              />
               <path
                 class="bond-hit"
                 {d}
@@ -324,7 +345,12 @@
                   tabindex="-1"
                   aria-label="Curvatura de {bond.id}"
                   onpointerdown={(e) => onBondHandlePointerDown(e, bond.id)}
-                  onkeydown={(e) => e.key === 'Enter' && session.updateBond(bond.id, { curvature: 0 })}
+                  ondblclick={(e) => {
+                    e.stopPropagation();
+                    session.inspecting = null;
+                    session.inspectingBond = bond.id;
+                  }}
+                  onkeydown={(e) => e.key === 'Enter' && (session.inspectingBond = bond.id)}
                 />
               {/if}
             </g>
@@ -335,6 +361,7 @@
       {#each network.tensors as tensor (tensor.id)}
         {@const selected = session.selection.includes(tensor.id)}
         {@const isCenter = network.orthogonalityCenter === tensor.id}
+        {@const ring = tensorRing(network, style, tensor)}
         <g class="moira-tensor" class:selected>
           {#each tensor.legs as leg (leg.id)}
             {@const tip = legTip(tensor, leg)}
@@ -356,7 +383,7 @@
                 />
               {/if}
             {:else}
-              <path class="moira-leg" d={freeLegPath(tensor, leg)} />
+              <path class="moira-leg" d={freeLegPath(tensor, leg)} stroke-width={legWidth(leg)} />
               <circle
                 class="leg-hit"
                 class:armed={session.pendingLeg === leg.id}
@@ -388,7 +415,15 @@
             {#if selected}
               <circle class="halo" r="19" />
             {/if}
-            <path class="moira-shape shape-{tensor.shape}" d={shapeOutline(tensor.shape, tipAngle(tensor))} />
+            {#if ring}
+              <!-- Segunda tag: anel fino em volta da forma. -->
+              <path class="moira-ring" d={shapeOutline(tensor.shape, tipAngle(tensor))} stroke={ring} />
+            {/if}
+            <path
+              class="moira-shape shape-{tensor.shape}"
+              d={shapeOutline(tensor.shape, tipAngle(tensor))}
+              fill={tensorFill(network, style, tensor)}
+            />
             {#if tensor.name}
               <text class="moira-name" x="0" y="-20">{tensor.name}{tensor.conjugate ? '†' : ''}</text>
             {/if}
@@ -406,6 +441,10 @@
         />
       {/if}
     </g>
+
+    {#if legend}
+      <Legend {legend} />
+    {/if}
   </svg>
 </div>
 
@@ -437,8 +476,6 @@
 
   .moira-bond {
     fill: none;
-    stroke: var(--c-ink);
-    stroke-width: 1.6;
     stroke-linecap: round;
   }
 
@@ -470,7 +507,6 @@
   .moira-leg {
     fill: none;
     stroke: var(--c-ink);
-    stroke-width: 1.4;
     stroke-linecap: round;
   }
 
@@ -499,13 +535,16 @@
   }
 
   .moira-shape {
-    fill: var(--c-generic);
     stroke: var(--c-ink);
     stroke-width: 1.6;
   }
 
-  .shape-dot {
-    fill: var(--c-ink);
+  /* O anel da segunda tag fica por fora da forma, sem preenchimento. Fino de
+     propósito: é informação secundária e não pode competir com o corpo. */
+  .moira-ring {
+    fill: none;
+    stroke-width: 3;
+    transform: scale(1.17);
   }
 
   .moira-body {

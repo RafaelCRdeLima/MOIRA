@@ -15,11 +15,15 @@ sem telemetria — nenhum dado sai da máquina.
 
 ## Estado
 
-Marco M1 concluído: além do esqueleto do M0 — tokens da identidade, modelo de
-dados, canvas SVG e persistência local — o editor tem inspetor, ângulos e
-curvatura editáveis, seleção múltipla, desfazer e refazer, copiar e colar,
-geradores de MPS, MPO, sanduíche, PEPS, árvore, MERA e matriz de transferência,
-e interface em português e inglês.
+Marco M2 concluído. O editor desenha e edita redes tensoriais — inspetor,
+ângulos e curvatura, seleção múltipla, desfazer e refazer, copiar e colar,
+geradores de MPS, MPO, sanduíche, PEPS, árvore, MERA e matriz de transferência —
+e tem a linguagem visual completa: cinco formas, cinco modos de coloração,
+espessura de aresta proporcional a log(D), arestas coloridas por valor, legenda
+automática e modo escuro. Interface em português e inglês.
+
+O que falta: fórmula em índices e geração de código (M3), exportação e a
+animação da ordem de contração (M4), tutorial e publicação (M5).
 A especificação de implementação está em [`docs/moira-spec.md`](docs/moira-spec.md)
 e a identidade visual, já fechada, em
 [`identidade/moira-identidade.md`](identidade/moira-identidade.md).

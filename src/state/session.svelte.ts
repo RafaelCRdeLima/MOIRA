@@ -14,8 +14,8 @@ import {
   removeBond,
   removeTensor,
 } from '../lib/model/network';
-import type { Bond, Network, Shape, Tensor } from '../lib/model/types';
-import { loadNetwork, saveNetwork } from '../lib/storage/persist';
+import type { Bond, ColorMode, Network, Shape, Tensor } from '../lib/model/types';
+import { loadNetwork, loadView, saveNetwork, saveView } from '../lib/storage/persist';
 
 const SAVE_DELAY_MS = 250;
 const PASTE_OFFSET = 32;
@@ -39,12 +39,17 @@ class Session {
   grid = $state<Grid>({ on: false, size: 24 });
   /** Tensor aberto no inspetor. */
   inspecting = $state<string | null>(null);
+  /** Vínculo aberto no inspetor, quando não há tensor aberto. */
+  inspectingBond = $state<string | null>(null);
   historyDepth = $state(0);
   redoDepth = $state(0);
 
   #history = new History();
   #clipboard: Fragment | null = null;
   #saveTimer: ReturnType<typeof setTimeout> | undefined;
+  #viewTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Verdadeiro quando havia uma vista gravada: sem ela, a rede é enquadrada. */
+  viewRestored = false;
   #dragOrigins: Map<string, { x: number; y: number }> | null = null;
   /** Um gesto só entra no histórico quando move alguma coisa: clicar sem
    *  arrastar não pode encher o desfazer de passos vazios. */
@@ -53,6 +58,11 @@ class Session {
   restore(): void {
     const stored = loadNetwork();
     if (stored) this.network = stored;
+    const view = loadView();
+    if (view) {
+      this.view = view;
+      this.viewRestored = true;
+    }
   }
 
   // ─── histórico ───────────────────────────────────────────────────────────
@@ -79,6 +89,8 @@ class Session {
     const alive = new Set(state.tensors.map((t) => t.id));
     this.selection = this.selection.filter((id) => alive.has(id));
     if (this.inspecting && !alive.has(this.inspecting)) this.inspecting = null;
+    const bonds = new Set(state.bonds.map((b) => b.id));
+    if (this.inspectingBond && !bonds.has(this.inspectingBond)) this.inspectingBond = null;
     this.pendingLeg = null;
     this.#syncHistoryDepth();
     this.touch();
@@ -100,6 +112,20 @@ class Session {
     clearTimeout(this.#saveTimer);
     this.#saveTimer = undefined;
     saveNetwork($state.snapshot(this.network) as Network);
+    this.flushView();
+  }
+
+  /** A vista tem gravação própria: deslocar a tela não precisa reserializar a
+   *  rede inteira a cada quadro. */
+  touchView(): void {
+    clearTimeout(this.#viewTimer);
+    this.#viewTimer = setTimeout(() => this.flushView(), SAVE_DELAY_MS);
+  }
+
+  flushView(): void {
+    clearTimeout(this.#viewTimer);
+    this.#viewTimer = undefined;
+    saveView({ ...this.view });
   }
 
   // ─── tensores ────────────────────────────────────────────────────────────
@@ -269,7 +295,10 @@ class Session {
 
   unbind(bondId: string): void {
     this.change();
-    if (removeBond(this.network, bondId)) this.touch();
+    if (removeBond(this.network, bondId)) {
+      if (this.inspectingBond === bondId) this.inspectingBond = null;
+      this.touch();
+    }
   }
 
   /** Arrastar a ponta de uma perna muda ângulo e comprimento juntos. */
@@ -359,6 +388,40 @@ class Session {
     this.touch();
   }
 
+  // ─── linguagem visual ────────────────────────────────────────────────────
+
+  setColorMode(mode: ColorMode): void {
+    if (this.network.colorMode === mode) return;
+    this.change();
+    this.network.colorMode = mode;
+    this.touch();
+  }
+
+  toggleLegend(): void {
+    this.change();
+    this.network.showLegend = this.network.showLegend === false;
+    this.touch();
+  }
+
+  toggleEdgeColorByValue(): void {
+    this.change();
+    this.network.edgeColorByValue = !this.network.edgeColorByValue;
+    this.touch();
+  }
+
+  setTensorColor(id: string, color: string | undefined): void {
+    const tensor = this.network.tensors.find((t) => t.id === id);
+    if (!tensor) return;
+    this.change();
+    if (color) tensor.color = color;
+    else delete tensor.color;
+    this.touch();
+  }
+
+  bond(id: string | null): Bond | undefined {
+    return id ? this.network.bonds.find((b) => b.id === id) : undefined;
+  }
+
   // ─── enquadramento ───────────────────────────────────────────────────────
 
   /** Ajusta a vista para que os tensores dados caibam na tela. Uma MERA de 16
@@ -383,6 +446,7 @@ class Session {
       x: viewport.w / 2 - (box.x + box.w / 2) * scale,
       y: viewport.h / 2 - (box.y + box.h / 2) * scale,
     };
+    this.touchView();
   }
 
   // ─── consultas ───────────────────────────────────────────────────────────

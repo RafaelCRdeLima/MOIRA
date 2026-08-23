@@ -78,6 +78,38 @@ export const pt = {
   'hint.curve': 'Arraste o meio de um vínculo para curvá-lo; clique nele para desfazê-lo.',
   'hint.keys': 'Ctrl+Z e Ctrl+Shift+Z desfazem e refazem; Ctrl+C e Ctrl+V copiam e colam.',
 
+  'color.title': 'Cor',
+  'color.tag': 'por tag',
+  'color.role': 'por papel',
+  'color.layer': 'por camada',
+  'color.degree': 'por grau',
+  'color.manual': 'manual',
+  'color.legend': 'legenda',
+  'color.byValue': 'arestas por valor',
+
+  'role.generic': 'genérico',
+  'role.isometry': 'isometria',
+  'role.unitary': 'unitária',
+  'role.delta': 'delta',
+  'role.orthocenter': 'centro de ortogonalidade',
+
+  'legend.untagged': 'sem tag',
+  'legend.others': 'outras',
+  'legend.bottom': 'base',
+  'legend.top': 'topo',
+  'legend.bondValue': 'valor do vínculo',
+
+  'theme.title': 'Tema',
+  'theme.light': 'claro',
+  'theme.dark': 'escuro',
+  'theme.system': 'do sistema',
+
+  'insp.color': 'cor',
+  'insp.clearColor': 'sem cor manual',
+  'insp.bond': 'Vínculo',
+  'insp.value': 'valor',
+  'insp.curvature': 'curvatura',
+
   'bond.pending': 'Vínculo pendente. Escolha a outra ponta, ou Esc para desistir.',
 } as const;
 
