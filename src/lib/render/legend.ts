@@ -85,7 +85,11 @@ export function buildLegend(network: Network, style: NetworkStyle): Legend | nul
     legend.valueRamp = { min: style.valueRange[0], max: style.valueRange[1], key: 'legend.bondValue' };
   }
 
+  // Uma legenda cuja única entrada é "sem tag" informa apenas que não há
+  // informação: ocupa espaço e ensina o leitor a ignorar a legenda.
+  const soSemTag =
+    legend.swatches.length === 1 && legend.swatches[0]!.key === 'legend.untagged';
   const empty =
-    legend.swatches.length === 0 && legend.ramp === null && legend.valueRamp === null;
+    (legend.swatches.length === 0 || soSemTag) && legend.ramp === null && legend.valueRamp === null;
   return empty ? null : legend;
 }
