@@ -35,6 +35,10 @@ export interface IndexSymbol {
   kind: IndexKind;
   /** Símbolo em LaTeX: `i`, `\alpha`, `i_{1}`. */
   symbol: string;
+  /** O mesmo índice como identificador de código: `i`, `alpha`, `i1`. Nasce
+   *  aqui, e não em cada gerador, para que a fórmula e os quatro dialetos
+   *  falem do mesmo índice com nomes que se reconhecem. */
+  code: string;
   /** Veio de rótulo escrito pelo usuário, e por isso não entra no rodízio. */
   custom: boolean;
   legIds: string[];
@@ -85,6 +89,7 @@ export function assignIndices(network: Network, previous?: IndexAssignment): Ind
   const byLeg = new Map<string, IndexSymbol>();
   const free: IndexSymbol[] = [];
   const summed: IndexSymbol[] = [];
+  const codes = new Set<string>();
 
   for (const slot of slots) {
     const alphabet = slot.kind === 'free' ? LATIN : GREEK;
@@ -95,6 +100,7 @@ export function assignIndices(network: Network, previous?: IndexAssignment): Ind
       key: slot.key,
       kind: slot.kind,
       symbol,
+      code: uniqueCode(symbol, codes),
       custom: slot.label !== undefined,
       legIds: slot.legIds,
     };
@@ -160,6 +166,27 @@ function readingOrder(a: { x: number; y: number; key: string }, b: { x: number; 
   if (a.x !== b.x) return a.x - b.x;
   if (a.y !== b.y) return a.y - b.y;
   return a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
+}
+
+/** Símbolo LaTeX como identificador: `\alpha` vira `alpha`, `i_{1}` vira `i1`.
+ *  Dois símbolos diferentes podem cair no mesmo nome — um rótulo escrito
+ *  `alpha` e a letra `\alpha` —, então a unicidade é forçada com sufixo. */
+export function codeNameOf(symbol: string): string {
+  const limpo = symbol
+    .replace(/\\/g, '')
+    .replace(/[{}\\^_]/g, '')
+    .replace(/[^A-Za-z0-9]/g, '');
+  if (limpo === '') return 'idx';
+  return /^\d/.test(limpo) ? `i${limpo}` : limpo;
+}
+
+function uniqueCode(symbol: string, used: Set<string>): string {
+  const base = codeNameOf(symbol);
+  let candidate = base;
+  let n = 2;
+  while (used.has(candidate)) candidate = `${base}_${n++}`;
+  used.add(candidate);
+  return candidate;
 }
 
 function nextSymbol(alphabet: string[], used: Set<string>): string {
