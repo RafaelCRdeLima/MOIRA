@@ -2,7 +2,7 @@
 
 export type Shape = 'circle' | 'square' | 'triangle' | 'dot' | 'diamond';
 
-/** Modos de coloração do §7. Só 'tag' está implementado até o M2. */
+/** Modos de coloração do §7. */
 export type ColorMode = 'tag' | 'role' | 'layer' | 'degree' | 'manual';
 
 export interface Leg {
