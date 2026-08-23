@@ -135,3 +135,38 @@ export function tipAngle(tensor: Tensor): number {
 export function round(n: number): number {
   return Math.round(n * 100) / 100;
 }
+
+export const MIN_LEG_LENGTH = 10;
+export const MAX_CURVATURE = 3;
+
+/** Ângulo e comprimento que põem a ponta da perna sob o ponto dado. */
+export function legGeometryFor(tensor: Tensor, point: Point): { angle: number; length: number } {
+  const dx = point.x - tensor.x;
+  const dy = point.y - tensor.y;
+  const angle = Math.atan2(dy, dx);
+  const length = Math.hypot(dx, dy) - boundaryRadius(tensor.shape, angle);
+  return { angle, length: Math.max(MIN_LEG_LENGTH, length) };
+}
+
+/** Curvatura que leva o meio da curva até o ponto dado. Inverte a conta de
+ *  `bondPath`: o meio se desloca 3/4 do deslocamento aplicado aos controles. */
+export function curvatureFor(network: Network, bond: Bond, point: Point): number {
+  const ends = bondEnds(network, bond);
+  if (!ends) return bond.curvature;
+  const p0 = legBase(ends.from.tensor, ends.from.leg);
+  const p3 = legBase(ends.to.tensor, ends.to.leg);
+  const c1 = legTip(ends.from.tensor, ends.from.leg);
+  const c2 = legTip(ends.to.tensor, ends.to.leg);
+
+  const dx = p3.x - p0.x;
+  const dy = p3.y - p0.y;
+  const chord = Math.hypot(dx, dy);
+  const nx = chord > 1e-6 ? -dy / chord : 0;
+  const ny = chord > 1e-6 ? dx / chord : -1;
+
+  const midX = (p0.x + 3 * c1.x + 3 * c2.x + p3.x) / 8;
+  const midY = (p0.y + 3 * c1.y + 3 * c2.y + p3.y) / 8;
+  const shift = ((point.x - midX) * nx + (point.y - midY) * ny) / 0.75;
+  const k = shift / Math.max(chord, 48);
+  return Math.max(-MAX_CURVATURE, Math.min(MAX_CURVATURE, k));
+}
