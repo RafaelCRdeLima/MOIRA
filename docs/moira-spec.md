@@ -152,6 +152,22 @@ Invariantes garantidos pelo modelo a todo momento:
   desenhado como laço.
 - Dimensões conflitantes nas pontas de um vínculo geram aviso, não erro bloqueante.
 
+**Agrupamento de pernas fica para o M4.** A notação agrupa e divide pernas
+(`rearrange(T, 'i j k l -> (i l) (k j)')`), e `Leg` não representa isso. A
+decisão é deliberada: enfiar agrupamento no modelo durante o M3 contaminaria a
+geração de fórmula, a geração de código e a busca de ordem ao mesmo tempo. No M3,
+o parser de `einsum` **recusa parênteses** com mensagem explícita ("agrupamento
+de índices ainda não suportado") em vez de interpretá-los errado. No M4 o
+agrupamento entra como `LegGroup` no tensor — lista ordenada de ids de perna — de
+forma aditiva, sem migração.
+
+**Versão de esquema.** Campo novo que seja opcional e aditivo não sobe a versão:
+um arquivo antigo continua abrindo e um arquivo novo continua sendo lido por
+código que ignora o campo. Os três campos acrescentados no M2 (`Tensor.color`,
+`Network.showLegend`, `Network.edgeColorByValue`) são desse tipo, e a versão
+segue em **1**. A versão sobe quando um campo existente muda de significado, de
+tipo ou de nome — e aí a migração correspondente entra em `storage/migrate.ts`.
+
 ## 6. Canvas e interação
 
 - Arrastar tensores; grade opcional com encaixe; zoom e pan.
@@ -318,11 +334,25 @@ legenda automática, modo escuro.
 *Aceite:* alternar modos de cor sem recarregar, e um screenshot que aguente
 comparação lado a lado com uma figura do `quimb`.
 
-**M3 — fórmula e contração.** Ordem ótima e gulosa, custo e escalonamento, faixa
-da equação ao vivo, geração de código nas quatro convenções, painel de validação.
-*Aceite:* `⟨ψ|O|ψ⟩` de uma MPS de 20 sítios gera código `ncon` que roda e bate
-com o `quimb`, com teste automatizado; e a mesma rede exibe a fórmula em índices
-correspondente, conferida contra a expressão escrita à mão.
+**M3a — fórmula em índices.** Atribuição de índices (latinos para físicos,
+gregos para vínculos internos, ordem alfabética estável), faixa da equação ao
+vivo em KaTeX, alternância entre somatório explícito e convenção de Einstein,
+botão de copiar LaTeX.
+*Aceite:* o sanduíche `⟨ψ|O|ψ⟩` de 4 sítios exibe a fórmula em índices conferida
+contra a expressão escrita à mão; mover um tensor no canvas não reembaralha as
+letras de quem ficou parado; a MERA de 16 folhas produz fórmula sem índice
+repetido três vezes nem índice livre duplicado.
+
+**M3b — contração e código.** Busca exaustiva do caminho ótimo (≤ 10 tensores,
+no espírito do `netcon`), heurística gulosa acima disso, custo em FLOPs e
+escalonamento em χ, maior intermediário em memória, geração de código nas quatro
+convenções, painel de validação do §11.
+*Aceite:* ver §14.1 — validação numérica contra contração por força bruta.
+
+O M3 era um marco só, com os dois entregáveis acoplados num aceite conjunto.
+Foram separados porque são independentes: um erro de nomeação de índice
+descoberto depois de já estar embutido em quatro geradores de código custa quatro
+vezes mais caro para corrigir.
 
 **M4 — publicação.** Exportação SVG/TikZ/PNG/JSON e a animação da ordem de contração.
 *Aceite:* o TikZ exportado compila em `pdflatex` sem edição manual.
@@ -337,6 +367,39 @@ da fórmula LaTeX, busca de ordem de contração contra casos conhecidos, cálcu
 custo, migração de JSON, serialização SVG. Snapshots determinísticos do SVG com
 posições arredondadas a duas casas, para não quebrarem por ruído de ponto
 flutuante. A camada de interação pode ficar sem teste automatizado no começo.
+
+Os aceites de marco são verificados em navegador, por roteiros em `e2e/`, fora
+do `npm test`. Os erros que mais importam nesta aplicação — captura de ponteiro,
+alvo de gesto, cor computada — não aparecem em teste de unidade.
+
+### 14.1 Validação numérica
+
+O critério original do M3 dizia que o `ncon` gerado "roda e bate com o `quimb`,
+com teste automatizado". Isso põe Python no laço de teste, e o projeto é
+TypeScript sem backend por decisão de escopo (§4). A verificação passa a ter duas
+camadas.
+
+**Camada A — no `vitest`, a cada commit.** Um contrator ingênuo de referência,
+escrito no próprio teste: soma explícita sobre todos os índices mudos, laços
+aninhados, tensores aleatórios com χ = 2 ou 3 e d = 2. Contrai-se a rede pela
+ordem que o MOIRA determinou e compara-se com a força bruta, com `toBeCloseTo`.
+Valida exatamente o que pode dar errado — contabilidade de índices, ordem de
+contração, transposições implícitas — e é um teste mais forte que o original,
+porque não depende de o `quimb` estar instalado nem de a convenção do `ncon`
+estar certa: verifica a matemática. Casos obrigatórios: MPS aberta de 6 sítios
+contra a MPS conjugada; sanduíche de 4 sítios; rede com laço (traço parcial); e
+rede desconexa, que deve dar o produto dos escalares.
+
+O contrator de referência vive no diretório de testes e nunca é importado pela
+aplicação. Se ele começar a ser útil em produção, alguma coisa saiu do escopo do
+§2 — o MOIRA não calcula nada numérico.
+
+**Camada B — uma vez, fora do laço.** `scripts/verifica-ncon.py` roda o `ncon`
+gerado e o `quimb` sobre a mesma rede e imprime os dois resultados. A saída fica
+commitada como fixture, com `scripts/README.md` explicando como refazer. Confere
+a *convenção* de saída — ordem dos índices negativos do `ncon`, sinais, ordem dos
+argumentos — que a camada A não pega, porque a camada A verifica a matemática e
+não o dialeto. Não roda no CI; precisa ter rodado antes do M5.
 
 ## 15. Estilo
 
