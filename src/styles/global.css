@@ -7,6 +7,10 @@
 @import '@fontsource/ibm-plex-sans/latin-ext-500.css';
 @import '@fontsource/ibm-plex-mono/latin-400.css';
 @import '@fontsource/ibm-plex-mono/latin-ext-400.css';
+/* KaTeX é global: a folha dele estiliza o HTML que o próprio KaTeX gera, que o
+   escopo de componente do Svelte não alcança. As fontes vêm do pacote e são
+   servidas do próprio domínio, como o §3 exige. */
+@import 'katex/dist/katex.css';
 @import './tokens.css';
 
 *,

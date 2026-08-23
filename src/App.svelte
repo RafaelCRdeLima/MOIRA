@@ -1,5 +1,6 @@
 <script lang="ts">
   import Canvas from './components/Canvas.svelte';
+  import FormulaBand from './components/FormulaBand.svelte';
   import Header from './components/Header.svelte';
   import Panel from './components/Panel.svelte';
   import Toolbar from './components/Toolbar.svelte';
@@ -42,6 +43,7 @@
 
 <Header />
 <Toolbar />
+<FormulaBand />
 <main>
   <div class="stage"><Canvas /></div>
   <Panel />

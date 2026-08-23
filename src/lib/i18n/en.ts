@@ -110,5 +110,15 @@ export const en: Dictionary = {
   'insp.value': 'value',
   'insp.curvature': 'curvature',
 
+  'formula.title': 'Formula',
+  'formula.summation': 'Summation',
+  'formula.explicit': 'Explicit Σ',
+  'formula.einstein': 'Einstein',
+  'formula.conjugate': 'Conjugation mark',
+  'formula.copy': 'Copy LaTeX',
+  'formula.copied': 'Copied',
+  'formula.emptyNetwork': 'No tensors, no formula.',
+  'formula.error': 'The expression did not compile:',
+
   'bond.pending': 'Bond pending. Pick the other end, or Esc to drop it.',
 };

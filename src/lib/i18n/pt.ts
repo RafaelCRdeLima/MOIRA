@@ -110,6 +110,16 @@ export const pt = {
   'insp.value': 'valor',
   'insp.curvature': 'curvatura',
 
+  'formula.title': 'Fórmula',
+  'formula.summation': 'Somatório',
+  'formula.explicit': 'Σ explícito',
+  'formula.einstein': 'Einstein',
+  'formula.conjugate': 'Marca de conjugação',
+  'formula.copy': 'Copiar LaTeX',
+  'formula.copied': 'Copiado',
+  'formula.emptyNetwork': 'Sem tensores, sem fórmula.',
+  'formula.error': 'A expressão não compilou:',
+
   'bond.pending': 'Vínculo pendente. Escolha a outra ponta, ou Esc para desistir.',
 } as const;
 

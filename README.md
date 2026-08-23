@@ -15,14 +15,15 @@ sem telemetria — nenhum dado sai da máquina.
 
 ## Estado
 
-Marco M2 concluído. O editor desenha e edita redes tensoriais — inspetor,
+Marco M3a concluído. O editor desenha e edita redes tensoriais — inspetor,
 ângulos e curvatura, seleção múltipla, desfazer e refazer, copiar e colar,
 geradores de MPS, MPO, sanduíche, PEPS, árvore, MERA e matriz de transferência —
-e tem a linguagem visual completa: cinco formas, cinco modos de coloração,
+tem a linguagem visual completa (cinco formas, cinco modos de coloração,
 espessura de aresta proporcional a log(D), arestas coloridas por valor, legenda
-automática e modo escuro. Interface em português e inglês.
+automática, modo escuro) e exibe ao vivo, em KaTeX, a equação em notação de
+índices que o diagrama representa. Interface em português e inglês.
 
-O que falta: fórmula em índices e geração de código (M3), exportação e a
+O que falta: ordem de contração, custo e geração de código (M3b), exportação e a
 animação da ordem de contração (M4), tutorial e publicação (M5).
 A especificação de implementação está em [`docs/moira-spec.md`](docs/moira-spec.md)
 e a identidade visual, já fechada, em
@@ -69,6 +70,9 @@ manual não serve.
   os intervalos de Unicode certos e sem chamar CDN de fontes.
 - **vitest + jsdom** — testes da lógica pura (§14).
 - **svelte-check** — verificação de tipos dentro dos componentes.
+- **katex** — a matemática da faixa da equação. Exigido pela especificação, e
+  a alternativa manual seria compor frações e subscritos em SVG à mão. As fontes
+  vêm no pacote e são servidas do próprio domínio, sem CDN.
 - **playwright** — os aceites de marco rodam em navegador porque os erros que
   mais importam aqui não aparecem em teste de unidade: captura de ponteiro
   redirecionando um duplo clique, alvo de gesto, cor que o CSS de fato computou.
