@@ -36,7 +36,13 @@ npm run dev      # servidor de desenvolvimento
 npm run build    # build estático em dist/
 npm test         # vitest sobre a lógica pura
 npm run check    # svelte-check
+npm run e2e      # aceites de marco em navegador, contra o servidor de dev
 ```
+
+Os aceites de marco vivem em [`e2e/`](e2e/) e ficam fora do `npm test` de
+propósito: o `vitest` é rápido e roda sempre; o e2e é ritual de fechamento de
+marco e precisa do servidor no ar. `npm run e2e -- m1` roda um marco só, e
+`MOIRA_URL` aponta para outro endereço.
 
 ## Referências
 
@@ -63,3 +69,8 @@ manual não serve.
   os intervalos de Unicode certos e sem chamar CDN de fontes.
 - **vitest + jsdom** — testes da lógica pura (§14).
 - **svelte-check** — verificação de tipos dentro dos componentes.
+- **playwright** — os aceites de marco rodam em navegador porque os erros que
+  mais importam aqui não aparecem em teste de unidade: captura de ponteiro
+  redirecionando um duplo clique, alvo de gesto, cor que o CSS de fato computou.
+  A alternativa manual é reabrir o navegador e repetir os gestos à mão a cada
+  marco, que foi o que se fez até o M2 e não se sustenta com cinco.

@@ -45,13 +45,14 @@ Não-objetivos — recusar explicitamente se surgirem no meio do caminho:
 ## 3. Identidade visual — já definida, não redesenhar
 
 A identidade está pronta e é entrada deste projeto, não decisão a tomar. Os
-arquivos ficam em `/assets` e o guia completo em `moira-identidade.md`:
+arquivos ficam em `public/assets/`, servidos em `/assets/`, e o guia completo em
+`identidade/moira-identidade.md`:
 
 - `moira-logo.svg` — logotipo horizontal, fundo claro
 - `moira-logo-dark.svg` — logotipo, fundo escuro
 - `moira-marca.svg` — marca isolada colorida (ícone de aplicativo)
 - `moira-favicon.svg` — marca simplificada, legível a 16 px
-- `moira-icones.svg` — catorze ícones como `<symbol>` reutilizáveis
+- `moira-icones.svg` — quinze ícones como `<symbol>` reutilizáveis
 
 **A marca** é um nó tensorial com três pernas de espessuras crescentes: as três
 Moiras, e ao mesmo tempo a convenção central do programa (espessura ∝ log D).
@@ -95,6 +96,11 @@ incompatíveis no vínculo χ₃. Ajuste uma das pontas." Estado vazio é convit
 - Zero backend. Build estático, publicável em Cloudflare Pages.
 - Persistência local: `localStorage` para a sessão + import/export de `.json`.
   Nenhum dado sai da máquina do usuário. Sem telemetria, sem cookies.
+  A rede fica em `moira:sessao`; deslocamento e zoom da vista, idioma e tema
+  ficam em chaves próprias (`moira:vista`, `moira:idioma`, `moira:tema`) porque
+  são estado de interface e não podem sujar o arquivo do projeto. Sessão
+  retomada sem vista gravada — arquivo importado, por exemplo — é enquadrada na
+  abertura, senão a rede reaparece fora da tela.
 - `KaTeX` para a matemática. Nenhuma dependência de grafo pesada (`d3-force`,
   `cytoscape`): layouts de rede tensorial são estruturados, não force-directed.
 - Alvo: 300 tensores com arrasto a 60 fps.
@@ -105,6 +111,7 @@ incompatíveis no vínculo χ₃. Ajuste uma das pontas." Estado vazio é convit
 
 ```ts
 type Shape = 'circle' | 'square' | 'triangle' | 'dot' | 'diamond';
+type ColorMode = 'tag' | 'role' | 'layer' | 'degree' | 'manual';   // §7
 
 interface Leg {
   id: string;
@@ -122,9 +129,12 @@ interface Tensor {
   shape: Shape;
   legs: Leg[];
   tags: string[];       // base da coloração, estilo quimb
-  isometryTip?: number; // perna para onde aponta a ponta do triângulo
+  isometryTip?: string; // id da perna para onde aponta a ponta do triângulo —
+                        // id e não índice, porque índice quebra em silêncio
+                        // quando as pernas são reordenadas ou apagadas
   conjugate?: boolean;
   frozen?: boolean;
+  color?: string;       // cor manual em CSS; sobrepõe o modo de coloração
 }
 
 interface Bond {
@@ -141,6 +151,8 @@ interface Network {
   bonds: Bond[];
   orthogonalityCenter?: string;
   colorMode: ColorMode;
+  showLegend?: boolean;       // legenda automática; ligada quando ausente
+  edgeColorByValue?: boolean; // colorir arestas por Bond.value
   meta: { title: string; created: string; version: number };
 }
 ```
@@ -151,6 +163,10 @@ Invariantes garantidos pelo modelo a todo momento:
 - Vínculo entre duas pernas do mesmo tensor é permitido (traço parcial) e
   desenhado como laço.
 - Dimensões conflitantes nas pontas de um vínculo geram aviso, não erro bloqueante.
+- `Bond.dim` só é preenchido quando as duas pernas declaram a mesma dimensão.
+  Divergentes, o vínculo fica sem dimensão e o aviso do §11 aparece — anotar uma
+  das duas seria escolher um lado em silêncio. Para desenhar e para calcular
+  custo, a dimensão ausente no vínculo cai para a da perna que a declarar.
 
 **Agrupamento de pernas fica para o M4.** A notação agrupa e divide pernas
 (`rearrange(T, 'i j k l -> (i l) (k j)')`), e `Leg` não representa isso. A
@@ -210,7 +226,9 @@ tensores. A cor aqui não decora: ela codifica.
 3. **Por camada**: rampa `viridis` pela coordenada y ou profundidade na árvore.
    É o que faz uma MERA parecer uma MERA.
 4. **Por grau**: número de pernas, rampa sequencial. Para depurar redes grandes.
-5. **Manual**: cor por tensor, sobrepondo os demais modos.
+5. **Manual**: cor por tensor em `Tensor.color`, sobrepondo os demais modos —
+   inclusive quando o seletor está noutro modo, porque uma cor escolhida à mão é
+   uma decisão do autor da figura e não uma consequência do modo ativo.
 
 **Arestas.** Espessura ∝ `log(D)`, limitada a [1.2 px, 6 px]; 1.6 px sem
 dimensão definida. Pernas livres um pouco mais finas que vínculos internos.
