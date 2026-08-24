@@ -436,6 +436,15 @@ isso a escondia.
   o `librsvg`, que é o motor do Inkscape, não entende `color-mix` e deixaria a
   legenda sem contorno.
 
+Um quarto caso, de outra natureza e mais instrutivo: o exportador de TikZ ia
+posicionar o rótulo com o `above` do próprio TikZ, em vez do deslocamento que o
+canvas e o SVG usam. O rótulo caía sobre a forma. **Nem toda duplicação se
+parece com código copiado** — usar o recurso nativo da ferramenta de destino
+para refazer uma decisão que já existe no modelo é recalcular por conta própria,
+disfarçado. A pergunta que pega o disfarce não é "estou copiando código?", é
+"esta decisão já foi tomada em algum lugar?". Aqui já estava, e virou
+`NAME_OFFSET`.
+
 Daí a regra: toda saída que deixa o programa é conferida por uma ferramenta que
 não participou de produzi-la — o intérprete real de cada dialeto, a biblioteca
 canônica da convenção, um renderizador que não seja o navegador em que a figura
