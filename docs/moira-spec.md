@@ -392,9 +392,11 @@ para não ser descoberto durante o marco.
 **M5 — lançamento.** Tutorial, deploy no Cloudflare Pages, README creditando
 Penrose pela notação e as referências de escopo.
 
-Pendência da camada B do §14.1 herdada do M3b: o `quimb` não estava instalado
-quando o script rodou, então o dialeto dele ainda não foi conferido contra os
-outros. O `ncon` está. Resolver antes do lançamento.
+Pendência herdada: o dialeto `ncon` para MATLAB é o único que nunca foi
+executado — nem MATLAB nem Octave estão disponíveis no ambiente de
+desenvolvimento, e instalar exige privilégio que não há ali. Os outros quatro
+rodam ao colar, conferidos por `scripts/verifica-codigo.ts`. Resolver antes do
+lançamento.
 
 ## 14. Testes
 

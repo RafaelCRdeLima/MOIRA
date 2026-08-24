@@ -121,6 +121,7 @@ export const en: Dictionary = {
   'formula.error': 'The expression did not compile:',
 
   'code.title': 'Code',
+  'code.examples': 'include example tensors',
   'code.copy': 'Copy',
   'code.copied': 'Copied',
   'code.empty': 'Draw a network to generate code.',

@@ -1,4 +1,43 @@
-# Camada B da validação numérica
+# Verificação fora do laço de teste
+
+Dois scripts, pelo mesmo motivo: há coisas que só se conferem executando de
+verdade, com ferramentas que o projeto não tem como dependência.
+
+## O código gerado roda ao colar
+
+```sh
+npm run verifica-codigo
+MOIRA_PYTHON=/caminho/para/python npm run verifica-codigo   # com quimb instalado
+```
+
+Gera os cinco dialetos para o sanduíche de 4 sítios, grava em
+`fixtures/gerado/` e executa os que o ambiente sabe executar. Cada um tem de
+imprimir o escalar sem edição nenhuma. Biblioteca ausente entra como pendência
+e aparece na saída — não conta como sucesso nem como falha.
+
+O que motivou isto: na verificação manual do M3b, o primeiro erro de quem colava
+o trecho era `NameError`, e o segundo era não ver resultado nenhum. Nenhum dos
+dois é defeito de matemática, e os dois transformam a ferramenta em demonstração.
+
+E rodar de verdade pegou dois defeitos que nenhum teste de unidade pegaria:
+
+- o `np.einsum` sem `optimize` contrai na ordem ingênua, e o sanduíche de 4
+  sítios não terminava. O caminho que o MOIRA calcula agora vai dentro da
+  chamada, no formato que o próprio numpy aceita;
+- o `ncon` do `TensorOperations.jl` **não é o do MATLAB**: o terceiro argumento
+  posicional ali é a lista de conjugação, e a sequência vai em `order=`. Passada
+  na posição, o erro era "number of tensors and of index lists should be the
+  same", que não diz nada sobre a causa.
+
+| dialeto | estado neste ambiente |
+|---|---|
+| `numpy.einsum` | roda, imprime o escalar |
+| `quimb` | roda, imprime o escalar (`MOIRA_PYTHON` apontando para um ambiente com quimb) |
+| `ncon` (Julia) | roda, imprime o escalar |
+| `ITensor` | roda, imprime o escalar |
+| `ncon` (MATLAB) | **pendente** — nem MATLAB nem Octave disponíveis, e instalar exige privilégio que não há aqui |
+
+## Camada B da validação numérica
 
 O §14.1 da especificação divide a verificação em duas camadas. A camada A roda
 no `vitest` a cada commit: contrai a rede pela ordem que o MOIRA determinou e

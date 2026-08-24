@@ -48,8 +48,8 @@ export async function executar(navegador) {
   // ── os quatro dialetos ───────────────────────────────────────────────────
   const abas = {
     'ncon (MATLAB)': [/R = ncon\(tensores, indices, sequencia\);/, /^%/m],
-    'ncon (Julia)': [/using TensorOperations/, /R = ncon\(tensores, indices, sequencia\)/],
-    'numpy.einsum': [/np\.einsum\('/, /from opt_einsum import contract/],
+    'ncon (Julia)': [/using TensorOperations/, /R = ncon\(tensores, indices; order=sequencia\)/],
+    'numpy.einsum': [/np\.einsum\('/, /caminho = \['einsum_path'/, /optimize=caminho/],
     quimb: [/qtn\.TensorNetwork\(\[/, /tags=\('bra', 'mps'\)/],
     ITensor: [/using ITensors/, /= Index\(\d+, "/],
   };

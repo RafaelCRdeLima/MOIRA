@@ -14,7 +14,9 @@
   const manual = $derived(contraction.manualPathFor(net));
   const ativo = $derived(contraction.activePathFor(net));
   const diagnostics = $derived(validate(session.network));
-  const codigo = $derived(generate(contraction.dialect, net, ativo, diagnostics));
+  const codigo = $derived(
+    generate(contraction.dialect, net, ativo, diagnostics, { examples: contraction.examples }),
+  );
 
   const metodo = $derived(
     t(`cost.${ativo.method === 'exhaustive' ? 'exhaustive' : ativo.method === 'greedy' ? 'greedy' : 'manual'}` as StringKey),
@@ -139,6 +141,10 @@
               onclick={() => contraction.setDialect(dialeto.id as Dialect)}>{dialeto.label}</button
             >
           {/each}
+          <label class="check exemplos">
+            <input type="checkbox" checked={contraction.examples} onchange={() => contraction.toggleExamples()} />
+            <span>{t('code.examples')}</span>
+          </label>
           <button type="button" class="copiar" disabled={!codigo.source} onclick={copiar}>
             {copiado ? t('code.copied') : t('code.copy')}
           </button>
@@ -305,8 +311,13 @@
     color: var(--c-selection);
   }
 
-  .copiar {
+  .exemplos {
     margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--step-2);
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .copiar:disabled {

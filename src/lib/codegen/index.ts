@@ -3,7 +3,8 @@
 import type { ContractNetwork } from '../contract/network';
 import type { ContractionPath } from '../contract/order';
 import type { Diagnostic } from '../validate/checks';
-import type { Dialect, GeneratedCode } from './common';
+import type { CodeOptions, Dialect, GeneratedCode } from './common';
+import { DEFAULT_CODE_OPTIONS } from './common';
 import { toEinsum } from './einsum';
 import { toITensor } from './itensor';
 import { toNconJulia, toNconMatlab } from './ncon';
@@ -17,7 +18,9 @@ export const DIALECTS: { id: Dialect; label: string }[] = [
   { id: 'itensor', label: 'ITensor' },
 ];
 
-const GERADORES: Record<Dialect, (net: ContractNetwork, path: ContractionPath) => GeneratedCode> = {
+type Gerador = (net: ContractNetwork, path: ContractionPath, options: CodeOptions) => GeneratedCode;
+
+const GERADORES: Record<Dialect, Gerador> = {
   'ncon-matlab': toNconMatlab,
   'ncon-julia': toNconJulia,
   einsum: toEinsum,
@@ -33,6 +36,7 @@ export function generate(
   net: ContractNetwork,
   path: ContractionPath,
   diagnostics: Diagnostic[],
+  options: CodeOptions = DEFAULT_CODE_OPTIONS,
 ): GeneratedCode {
   if (net.tensors.length === 0) {
     return { dialect, source: null, problem: 'empty' };
@@ -41,10 +45,11 @@ export function generate(
   if (bloqueio) {
     return { dialect, source: null, problem: bloqueio.code };
   }
-  return GERADORES[dialect](net, path);
+  return GERADORES[dialect](net, path, options);
 }
 
-export type { Dialect, GeneratedCode };
+export type { CodeOptions, Dialect, GeneratedCode };
+export { DEFAULT_CODE_OPTIONS } from './common';
 export { nconLabels } from './ncon';
 export { einsumLetters } from './einsum';
 export { scalingLabel, formatFlops, formatCount, pairSequence } from './common';

@@ -31,7 +31,17 @@ O que falta: exportação SVG/TikZ/PNG/JSON e a animação da ordem de contraç�
 
 A validação numérica tem duas camadas (§14.1): a de dentro do `npm test`
 contrai cada rede pela ordem escolhida e compara com a força bruta; a de fora,
-em [`scripts/`](scripts/), confere a convenção do `ncon` contra o `numpy`.
+em [`scripts/`](scripts/), confere a convenção do `ncon` contra o `numpy` e roda
+o código gerado em cada dialeto para garantir que ele funciona ao colar.
+
+## Por que exportar do MOIRA e não desenhar pela biblioteca
+
+O `quimb` sabe desenhar uma rede tensorial, e o `.draw()` dele é útil — mas usa
+layout automático e não conhece as posições. A mesma rede sai com a bra embaixo
+e o ket em cima, ou com os sítios em qualquer ordem que o algoritmo achar. **O
+MOIRA preserva a geometria que você desenhou; as bibliotecas de rede tensorial
+não.** É por isso que a exportação existe: a figura do artigo é a que você
+compôs, não a que um algoritmo de molas encontrou.
 A especificação de implementação está em [`docs/moira-spec.md`](docs/moira-spec.md)
 e a identidade visual, já fechada, em
 [`identidade/moira-identidade.md`](identidade/moira-identidade.md).
@@ -80,6 +90,10 @@ manual não serve.
 - **katex** — a matemática da faixa da equação. Exigido pela especificação, e
   a alternativa manual seria compor frações e subscritos em SVG à mão. As fontes
   vêm no pacote e são servidas do próprio domínio, sem CDN.
+- **vite-node** — roda um módulo TypeScript do projeto fora do navegador, com a
+  mesma configuração do Vite. É o que permite gerar o código dos cinco dialetos
+  e executá-lo em `scripts/`; a alternativa manual seria compilar o projeto
+  inteiro só para isso.
 - **playwright** — os aceites de marco rodam em navegador porque os erros que
   mais importam aqui não aparecem em teste de unidade: captura de ponteiro
   redirecionando um duplo clique, alvo de gesto, cor que o CSS de fato computou.

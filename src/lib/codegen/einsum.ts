@@ -7,9 +7,28 @@
 import type { ContractNetwork } from '../contract/network';
 import type { ContractionPath } from '../contract/order';
 import type { GeneratedCode } from './common';
-import { header, operands, pairSequence, shapeComments } from './common';
+import type { CodeOptions } from './common';
+import {
+  DEFAULT_CODE_OPTIONS,
+  exampleBlock,
+  header,
+  operands,
+  pairSequence,
+  shapeComments,
+} from './common';
 
 const ALFABETO = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+/** O caminho no formato que o `numpy.einsum` aceita em `optimize=`: a lista
+ *  começa com o marcador `'einsum_path'` e segue com os pares de posições. */
+function numpyPath(pares: [number, number][]): string {
+  return `['einsum_path', ${pares.map(([a, b]) => `(${a}, ${b})`).join(', ')}]`;
+}
+
+/** O `opt_einsum` toma a mesma lista, sem o marcador. */
+function optPath(pares: [number, number][]): string {
+  return `[${pares.map(([a, b]) => `(${a}, ${b})`).join(', ')}]`;
+}
 
 export function einsumLetters(net: ContractNetwork): Map<string, string> | null {
   const chaves = [...net.byKey.keys()];
@@ -22,17 +41,29 @@ export function einsumLetters(net: ContractNetwork): Map<string, string> | null 
   return new Map(ordem.map((k, i) => [k, ALFABETO[i]!]));
 }
 
-export function toEinsum(net: ContractNetwork, path: ContractionPath): GeneratedCode {
+export function toEinsum(
+  net: ContractNetwork,
+  path: ContractionPath,
+  options: CodeOptions = DEFAULT_CODE_OPTIONS,
+): GeneratedCode {
   const tensores = operands(net);
   const letras = einsumLetters(net);
   const caminho = pairSequence(path, tensores.length);
 
   const linhas = [
-    ...header(net, path, '#'),
+    ...header(net, path, '#', options),
     '#',
     ...shapeComments(net, '#'),
     '',
     'import numpy as np',
+    '',
+    ...(options.examples
+      ? exampleBlock(
+          net,
+          '#',
+          (t) => `${t.code} = np.random.rand(${t.axes.map((a) => a.dim).join(', ')})`,
+        )
+      : []),
   ];
 
   if (letras) {
@@ -40,13 +71,16 @@ export function toEinsum(net: ContractNetwork, path: ContractionPath): Generated
     const saida = net.free.map((a) => letras.get(a.key)!).join('');
     const assinatura = `${entradas.join(',')}->${saida}`;
     linhas.push(
+      '# The contraction order MOIRA found. numpy takes it directly:',
+      '# without it, einsum contracts naively and a network of this size does',
+      '# not finish.',
+      `caminho = ${numpyPath(caminho)}`,
       '',
-      `R = np.einsum('${assinatura}', ${tensores.map((t) => t.code).join(', ')})`,
+      `R = np.einsum('${assinatura}', ${tensores.map((t) => t.code).join(', ')}, optimize=caminho)`,
+      'print(R)',
       '',
-      '# With the order MOIRA chose, instead of the one numpy guesses:',
-      'from opt_einsum import contract',
-      `caminho = [${caminho.map(([a, b]) => `(${a}, ${b})`).join(', ')}]`,
-      `R = contract('${assinatura}', ${tensores.map((t) => t.code).join(', ')}, optimize=caminho)`,
+      '# opt_einsum takes the same path, without the leading marker:',
+      `# contract('${assinatura}', ${tensores.map((t) => t.code).join(', ')}, optimize=${optPath(caminho)})`,
     );
   } else {
     // Forma intercalada: cada tensor seguido da lista de eixos, e a lista de
@@ -60,18 +94,15 @@ export function toEinsum(net: ContractNetwork, path: ContractionPath): Generated
       '',
       `# ${net.byKey.size} distinct indices exceed the einsum alphabet;`,
       '# this is the interleaved form, which has no such limit.',
-      'R = np.einsum(',
-      `    ${argumentos},`,
-      `    ${saida},`,
-      ')',
+      '# The contraction order MOIRA found; without it einsum contracts naively.',
+      `caminho = ${numpyPath(caminho)}`,
       '',
-      'from opt_einsum import contract',
-      `caminho = [${caminho.map(([a, b]) => `(${a}, ${b})`).join(', ')}]`,
-      'R = contract(',
+      'R = np.einsum(',
       `    ${argumentos},`,
       `    ${saida},`,
       '    optimize=caminho,',
       ')',
+      'print(R)',
     );
   }
 

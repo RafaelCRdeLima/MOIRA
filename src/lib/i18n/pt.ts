@@ -121,6 +121,7 @@ export const pt = {
   'formula.error': 'A expressão não compilou:',
 
   'code.title': 'Código',
+  'code.examples': 'incluir tensores de exemplo',
   'code.copy': 'Copiar',
   'code.copied': 'Copiado',
   'code.empty': 'Desenhe uma rede para gerar código.',

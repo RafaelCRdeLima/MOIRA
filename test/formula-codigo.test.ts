@@ -201,6 +201,48 @@ describe('os dialetos gerados', () => {
     expect(gerado.problem).toBe('dimMismatch');
   });
 
+  it('o código roda ao colar: declara os tensores e imprime o resultado', () => {
+    const { codigo } = gerarTudo(comoRede(sandwich({ sites: 3 })));
+
+    // Sem o bloco de exemplo, o primeiro erro de quem cola é NameError.
+    expect(codigo.einsum.source).toMatch(/A1c = np\.random\.rand\(/);
+    expect(codigo.quimb.source).toMatch(/A1c = np\.random\.rand\(/);
+    expect(codigo['ncon-matlab'].source).toMatch(/A1c = rand\(\[/);
+    expect(codigo['ncon-julia'].source).toMatch(/A1c = randn\(/);
+    expect(codigo.itensor.source).toMatch(/dados_A1c = randn\(/);
+
+    // E o segundo é não ver resultado nenhum.
+    expect(codigo.einsum.source).toMatch(/^print\(R\)$/m);
+    expect(codigo.quimb.source).toMatch(/^print\(R\)$/m);
+    expect(codigo['ncon-matlab'].source).toMatch(/^disp\(R\)$/m);
+    expect(codigo['ncon-julia'].source).toMatch(/^println\(R\)$/m);
+    expect(codigo.itensor.source).toMatch(/^println\(scalar\(R\)\)$/m);
+
+    // O cabeçalho diz que os dados são entrada de quem usa.
+    for (const gerado of Object.values(codigo)) {
+      expect(gerado.source).toMatch(/YOUR input/);
+    }
+  });
+
+  it('sem o bloco de exemplo, o cabeçalho manda declarar os tensores', () => {
+    const network = comoRede(sandwich({ sites: 3 }));
+    const assignment = assignIndices(network);
+    const contract = buildContractNetwork(network, assignment);
+    const gerado = generate('einsum', contract, findPath(contract), [], { examples: false });
+
+    expect(gerado.source).not.toMatch(/np\.random\.rand/);
+    expect(gerado.source).toMatch(/Declare them before running/);
+    expect(gerado.source).toMatch(/^print\(R\)$/m); // a impressão fica
+  });
+
+  it('o einsum leva a ordem de contração dentro da chamada', () => {
+    // Sem `optimize`, o numpy contrai ingenuamente e uma rede deste tamanho
+    // não termina. O caminho vai no formato que o próprio numpy aceita.
+    const { codigo } = gerarTudo(comoRede(sandwich({ sites: 4 })));
+    expect(codigo.einsum.source).toMatch(/caminho = \['einsum_path', \(\d+, \d+\)/);
+    expect(codigo.einsum.source).toMatch(/optimize=caminho/);
+  });
+
   it('rede vazia também não gera', () => {
     const network = emptyNetwork();
     const contract = buildContractNetwork(network, assignIndices(network));

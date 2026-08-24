@@ -4,16 +4,29 @@
 import type { ContractNetwork } from '../contract/network';
 import type { ContractionPath } from '../contract/order';
 import type { GeneratedCode } from './common';
-import { header, operands } from './common';
+import type { CodeOptions } from './common';
+import { DEFAULT_CODE_OPTIONS, exampleBlock, header, operands } from './common';
 
-export function toQuimb(net: ContractNetwork, path: ContractionPath): GeneratedCode {
+export function toQuimb(
+  net: ContractNetwork,
+  path: ContractionPath,
+  options: CodeOptions = DEFAULT_CODE_OPTIONS,
+): GeneratedCode {
   const tensores = operands(net);
 
   const linhas = [
-    ...header(net, path, '#'),
+    ...header(net, path, '#', options),
     '',
+    'import numpy as np',
     'import quimb.tensor as qtn',
     '',
+    ...(options.examples
+      ? exampleBlock(
+          net,
+          '#',
+          (t) => `${t.code} = np.random.rand(${t.axes.map((a) => a.dim).join(', ')})`,
+        )
+      : []),
   ];
 
   for (const t of tensores) {
@@ -33,6 +46,10 @@ export function toQuimb(net: ContractNetwork, path: ContractionPath): GeneratedC
     net.free.length > 0
       ? `R = tn.contract(output_inds=(${saida}${net.free.length === 1 ? ',' : ''}))`
       : 'R = tn.contract()',
+    'print(R)',
+    '',
+    '# tn.draw() desenha a rede — com layout próprio, não com a geometria do',
+    '# diagrama. Para a figura que você desenhou, exporte SVG ou TikZ do MOIRA.',
   );
 
   return { dialect: 'quimb', source: linhas.join('\n'), problem: null };

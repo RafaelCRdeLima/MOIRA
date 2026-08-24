@@ -8,7 +8,8 @@
 import type { ContractNetwork } from '../contract/network';
 import type { ContractionPath } from '../contract/order';
 import type { GeneratedCode } from './common';
-import { header, operands, shapeComments } from './common';
+import type { CodeOptions } from './common';
+import { DEFAULT_CODE_OPTIONS, exampleBlock, header, operands, shapeComments } from './common';
 
 export function nconLabels(net: ContractNetwork, path: ContractionPath): Map<string, number> {
   const rotulos = new Map<string, number>();
@@ -32,49 +33,75 @@ function listas(net: ContractNetwork, rotulos: Map<string, number>): string[][] 
   return operands(net).map((t) => t.axes.map((a) => String(rotulos.get(a.key)!)));
 }
 
-export function toNconMatlab(net: ContractNetwork, path: ContractionPath): GeneratedCode {
+export function toNconMatlab(
+  net: ContractNetwork,
+  path: ContractionPath,
+  options: CodeOptions = DEFAULT_CODE_OPTIONS,
+): GeneratedCode {
   const rotulos = nconLabels(net, path);
   const tensores = operands(net);
   const idx = listas(net, rotulos);
   const sequencia = sequenceOf(path, rotulos);
 
   const linhas = [
-    ...header(net, path, '%'),
+    ...header(net, path, '%', options),
     '%',
     '% Contracted indices are numbered in the order the chosen path sums them,',
     '% so the sequence argument is simply 1, 2, 3, ...',
     '%',
-    '% Fill each tensor with its data before contracting.',
     ...shapeComments(net, '%'),
     '',
+    // O MATLAB não tem array de uma dimensão: um tensor de uma perna vira
+    // vetor coluna, e `rand([n])` daria uma matriz n×n.
+    ...(options.examples
+      ? exampleBlock(
+          net,
+          '%',
+          (t) =>
+            `${t.code} = rand([${t.axes.map((a) => a.dim).join(' ')}${t.axes.length === 1 ? ' 1' : ''}]);`,
+        )
+      : []),
     `tensores = {${tensores.map((t) => t.code).join(', ')}};`,
     `indices  = {${idx.map((l) => `[${l.join(' ')}]`).join(', ')}};`,
     sequencia.length > 0 ? `sequencia = [${sequencia.join(' ')}];` : 'sequencia = [];',
     '',
     'R = ncon(tensores, indices, sequencia);',
+    'disp(R)',
   ];
   return { dialect: 'ncon-matlab', source: linhas.join('\n'), problem: null };
 }
 
-export function toNconJulia(net: ContractNetwork, path: ContractionPath): GeneratedCode {
+export function toNconJulia(
+  net: ContractNetwork,
+  path: ContractionPath,
+  options: CodeOptions = DEFAULT_CODE_OPTIONS,
+): GeneratedCode {
   const rotulos = nconLabels(net, path);
   const tensores = operands(net);
   const idx = listas(net, rotulos);
   const sequencia = sequenceOf(path, rotulos);
 
   const linhas = [
-    ...header(net, path, '#'),
+    ...header(net, path, '#', options),
     '#',
     '# Contracted indices are numbered in the order the chosen path sums them.',
     ...shapeComments(net, '#'),
     '',
     'using TensorOperations',
     '',
+    ...(options.examples
+      ? exampleBlock(net, '#', (t) => `${t.code} = randn(${t.axes.map((a) => a.dim).join(', ')})`)
+      : []),
     `tensores = [${tensores.map((t) => t.code).join(', ')}]`,
     `indices  = [${idx.map((l) => `[${l.join(', ')}]`).join(', ')}]`,
     sequencia.length > 0 ? `sequencia = [${sequencia.join(', ')}]` : 'sequencia = Int[]',
     '',
-    'R = ncon(tensores, indices, sequencia)',
+    // O ncon do TensorOperations.jl não é o do MATLAB: o terceiro argumento
+    // posicional ali é a lista de conjugação, e a sequência vai em `order=`.
+    // Passá-la na posição dá "number of tensors and of index lists should be
+    // the same", que não diz nada sobre a causa.
+    'R = ncon(tensores, indices; order=sequencia)',
+    'println(R)',
   ];
   return { dialect: 'ncon-julia', source: linhas.join('\n'), problem: null };
 }

@@ -10,6 +10,14 @@ import type { ContractionPath, OrderNode } from '../contract/order';
 
 export type Dialect = 'ncon-matlab' | 'ncon-julia' | 'einsum' | 'quimb' | 'itensor';
 
+export interface CodeOptions {
+  /** Bloco de tensores de exemplo no topo. Quem já tem os dados carregados não
+   *  quer sobrescrevê-los. */
+  examples: boolean;
+}
+
+export const DEFAULT_CODE_OPTIONS: CodeOptions = { examples: true };
+
 export interface GeneratedCode {
   dialect: Dialect;
   /** Código pronto, ou nulo quando a rede não permite gerar. */
@@ -53,7 +61,12 @@ function mesmoGrupo(a: number[], b: number[]): boolean {
  *  Em inglês, e só ele: o código gerado vai para MATLAB, Julia e Python, é
  *  colado em repositório e mandado para colaborador. A interface é bilíngue; o
  *  artefato que sai dela fala a língua das ferramentas de destino. */
-export function header(net: ContractNetwork, path: ContractionPath, marca: string): string[] {
+export function header(
+  net: ContractNetwork,
+  path: ContractionPath,
+  marca: string,
+  options: CodeOptions,
+): string[] {
   const ordem =
     path.method === 'exhaustive'
       ? 'optimal (exhaustive search)'
@@ -71,16 +84,31 @@ export function header(net: ContractNetwork, path: ContractionPath, marca: strin
       `${marca} ${net.assumed} ${net.assumed === 1 ? 'index has' : 'indices have'} no declared dimension; 2 assumed.`,
     );
   }
+  // O MOIRA desenha, ordena e traduz; dados numéricos são entrada de quem usa.
+  // Dizer isso no cabeçalho evita a primeira dúvida de quem cola o trecho.
+  linhas.push(
+    `${marca}`,
+    options.examples
+      ? `${marca} The tensors below are YOUR input. The random block exists only so this`
+      : `${marca} The tensors below are YOUR input — MOIRA does not produce numerical data.`,
+    options.examples
+      ? `${marca} snippet runs as-is; replace it with your own data.`
+      : `${marca} Declare them before running, with the shapes listed here.`,
+  );
   return linhas;
 }
 
 /** Uma linha por tensor, com a forma que ele precisa ter. */
 export function shapeComments(net: ContractNetwork, marca: string): string[] {
-  return net.tensors.map(
+  const nota = net.tensors.some((t) => t.conjugate)
+    ? [`${marca} Tensors marked (conjugate) enter the contraction conjugated:`,
+       `${marca} pass the conjugated data in those slots.`]
+    : [];
+  return nota.concat(net.tensors.map(
     (t) =>
       `${marca} ${t.code}: ${t.axes.map((a) => `${a.code}=${a.dim}`).join(' × ')}` +
       (t.conjugate ? '  (conjugate)' : ''),
-  );
+  ));
 }
 
 const SOBRESCRITO = '⁰¹²³⁴⁵⁶⁷⁸⁹';
@@ -120,4 +148,28 @@ function codeCount(n: number): string {
  *  leitura do canvas, a mesma dos fatores da fórmula. */
 export function operands(net: ContractNetwork): ContractTensor[] {
   return net.tensors;
+}
+
+/** Bloco de tensores de exemplo, na sintaxe de cada dialeto. Sem ele o primeiro
+ *  erro de quem cola o trecho é `NameError`, e o código deixa de ser ferramenta
+ *  para virar demonstração. */
+export function exampleBlock(
+  net: ContractNetwork,
+  marca: string,
+  linha: (t: ContractTensor) => string,
+): string[] {
+  // Um tensor conjugado recebe dados independentes, e não o conjugado de
+  // outro: o modelo marca que ele é conjugado, não de quem. Inventar a relação
+  // seria adivinhar, e o número sairia certo por acidente.
+  const temConjugado = net.tensors.some((t) => t.conjugate);
+  return [
+    `${marca} Example data — replace with your own tensors.`,
+    ...(temConjugado
+      ? [`${marca} Conjugate tensors get independent random data here, not the`,
+         `${marca} conjugate of their partner — MOIRA marks that a tensor is`,
+         `${marca} conjugated, not whose conjugate it is.`]
+      : []),
+    ...operands(net).map(linha),
+    '',
+  ];
 }

@@ -15,22 +15,25 @@ import type { Network } from '../lib/model/types';
 
 const STORAGE_KEY = 'moira:codigo';
 
-function stored(): { dialect: Dialect; open: boolean } {
+function stored(): { dialect: Dialect; open: boolean; examples: boolean } {
   try {
     const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') as Record<string, unknown>;
     const dialect = raw['dialect'];
     return {
       dialect: typeof dialect === 'string' ? (dialect as Dialect) : 'ncon-matlab',
       open: raw['open'] !== false,
+      examples: raw['examples'] !== false,
     };
   } catch {
-    return { dialect: 'ncon-matlab', open: true };
+    return { dialect: 'ncon-matlab', open: true, examples: true };
   }
 }
 
 class ContractionStore {
   dialect = $state<Dialect>(stored().dialect);
   open = $state(stored().open);
+  /** Bloco de tensores de exemplo no código gerado. */
+  examples = $state(stored().examples);
   /** Ordem fixada à mão: ids de tensores, contraídos da esquerda para a direita. */
   manual = $state<string[] | null>(null);
   useManual = $state(false);
@@ -45,6 +48,11 @@ class ContractionStore {
 
   toggleOpen(): void {
     this.open = !this.open;
+    this.#save();
+  }
+
+  toggleExamples(): void {
+    this.examples = !this.examples;
     this.#save();
   }
 
@@ -97,7 +105,10 @@ class ContractionStore {
 
   #save(): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ dialect: this.dialect, open: this.open }));
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ dialect: this.dialect, open: this.open, examples: this.examples }),
+      );
     } catch {
       /* armazenamento bloqueado */
     }
