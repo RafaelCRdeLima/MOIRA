@@ -73,10 +73,10 @@ export async function executar(navegador) {
   const amostras = await page.locator('.moira-legend rect').count();
   relatorio.confere('legenda automática lista as tags presentes', amostras >= 3, `${amostras} amostras`);
 
-  await page.getByLabel('legenda').uncheck();
+  await page.getByLabel('legenda', { exact: true }).uncheck();
   await page.waitForTimeout(180);
   relatorio.confere('e desliga', (await page.locator('.moira-legend').count()) === 0);
-  await page.getByLabel('legenda').check();
+  await page.getByLabel('legenda', { exact: true }).check();
 
   // ── modo escuro ──────────────────────────────────────────────────────────
   await page.locator('header select').first().selectOption('dark');

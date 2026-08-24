@@ -10,7 +10,8 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
     "e2e": "node e2e/executar.mjs",
-    "verifica-codigo": "vite-node scripts/verifica-codigo.ts"
+    "verifica-codigo": "vite-node scripts/verifica-codigo.ts",
+    "verifica-exportacao": "vite-node scripts/verifica-exportacao.ts"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.0",

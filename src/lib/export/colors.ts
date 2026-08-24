@@ -10,15 +10,37 @@ export function cssColorResolver(root: Element | null = null): (valor: string) =
   const estilo = getComputedStyle(alvo);
   const cache = new Map<string, string>();
 
-  return (valor: string): string => {
+  // Sonda: atribuir a cor a um elemento e ler de volta faz o navegador resolver
+  // o que ainda não é cor concreta. Os tokens derivados são `color-mix(...)`, e
+  // um renderizador antigo — o librsvg do Inkscape, por exemplo — não entende
+  // `color-mix`. Sai `rgb(...)`, que todo mundo entende.
+  const sonda = document.createElement('span');
+  sonda.style.display = 'none';
+  document.body.appendChild(sonda);
+
+  const concreta = (valor: string): string => {
+    try {
+      sonda.style.color = '';
+      sonda.style.color = valor;
+      const lido = getComputedStyle(sonda).color;
+      return lido && lido !== 'rgba(0, 0, 0, 0)' ? lido : valor;
+    } catch {
+      return valor;
+    }
+  };
+
+  const resolver = (valor: string): string => {
     const guardado = cache.get(valor);
     if (guardado !== undefined) return guardado;
 
     const nome = /^var\((--[^)]+)\)$/.exec(valor.trim())?.[1];
-    const resolvido = nome ? estilo.getPropertyValue(nome).trim() || valor : valor;
+    const substituido = nome ? estilo.getPropertyValue(nome).trim() || valor : valor;
+    const resolvido = concreta(substituido);
     cache.set(valor, resolvido);
     return resolvido;
   };
+
+  return resolver;
 }
 
 /** Salva um texto como arquivo. Um `blob:` e um clique — não há servidor para

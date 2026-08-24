@@ -72,7 +72,11 @@ export async function executar(navegador) {
   const escuro = await baixar(page, () => page.getByRole('button', { name: 'SVG' }).click());
   relatorio.confere(
     'no modo escuro, o arquivo sai com a tinta clara',
-    escuro.conteudo.includes('#f2f0ec') && !escuro.conteudo.includes('#1b2430'),
+    escuro.conteudo.includes('rgb(242, 240, 236)') && !escuro.conteudo.includes('rgb(27, 36, 48)'),
+  );
+  relatorio.confere(
+    'e sempre em cor concreta: nem var() nem color-mix, que renderizador antigo não lê',
+    !/var\(--|color-mix\(/.test(escuro.conteudo) && !/var\(--|color-mix\(/.test(svg.conteudo),
   );
   await page.locator('header select').first().selectOption('light');
 

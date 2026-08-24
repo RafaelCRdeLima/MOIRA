@@ -62,6 +62,27 @@ um `ncon` próprio para testar o gerador seria comparar o programa com a nossa
 leitura da convenção, que é exatamente o que deixaria passar um erro como o do
 `order=` no dialeto de Julia.
 
+## A exportação abre fora do navegador
+
+```sh
+npm run verifica-exportacao
+MOIRA_RSVG='micromamba run -n moira-svg rsvg-convert' npm run verifica-exportacao
+```
+
+Exporta o sanduíche e a MERA e manda o `librsvg` desenhá-los. O `librsvg` é o
+motor do Inkscape e do GNOME, não compartilha código com o Chrome e é mais
+rigoroso: um SVG que ele desenha é um SVG válido, não um SVG que um navegador
+tolerou. É o equivalente, para a figura, do que rodar o `ncon.m` canônico foi
+para o código.
+
+```sh
+micromamba create -y -n moira-svg -c conda-forge librsvg
+```
+
+As cores saem do próprio `tokens.css`, lido pelo script — não há uma segunda
+tabela da paleta para sair de sincronia. O `color-mix` dos tokens derivados é
+resolvido em sRGB ali mesmo, porque não há navegador para fazê-lo.
+
 ## Camada B da validação numérica
 
 O §14.1 da especificação divide a verificação em duas camadas. A camada A roda

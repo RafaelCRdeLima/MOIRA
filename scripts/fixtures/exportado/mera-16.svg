@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-499.58 -315.5 999.15 621.38" width="999.15" height="621.38" role="img" aria-label="mera-16">
+<title>mera-16</title>
+<style>
+  .moira-paper { fill: #ffffff; }
+  .moira-bond { fill: none; stroke: #1b2430; stroke-linecap: round; }
+  .moira-leg { fill: none; stroke: #1b2430; stroke-linecap: round; }
+  .moira-shape { stroke: #1b2430; stroke-width: 1.6; }
+  .moira-ring { fill: none; stroke-width: 3; }
+  .moira-orthocenter { fill: #ccbb44; fill-opacity: 0.45; }
+  .moira-name { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; text-anchor: middle; fill: #1b2430; }
+  .moira-legend-box { fill: #ffffff; fill-opacity: 0.92; stroke: rgba(27, 36, 48, 0.14); }
+  .moira-legend-title { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 11px; fill: rgba(27, 36, 48, 0.55); }
+  .moira-legend-label { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; fill: #1b2430; }
+  .moira-legend-end { text-anchor: end; }
+  .moira-legend-swatch, .moira-legend-ramp { stroke: rgba(27, 36, 48, 0.14); }
+</style>
+<rect class="moira-paper" x="-499.58" y="-315.5" width="999.15" height="621.38"/>
+<g class="moira-bonds">
+  <path class="moira-bond" d="M-395 241.5C-413.38 223.12,-420.42 225.08,-438.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-373 241.5C-354.62 223.12,-347.58 225.08,-329.19 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-267 241.5C-285.38 223.12,-292.42 225.08,-310.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-245 241.5C-226.62 223.12,-219.58 225.08,-201.19 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-139 241.5C-157.38 223.12,-164.42 225.08,-182.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-117 241.5C-98.62 223.12,-91.58 225.08,-73.19 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-11 241.5C-29.38 223.12,-36.42 225.08,-54.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M11 241.5C29.38 223.12,36.42 225.08,54.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M117 241.5C98.62 223.12,91.58 225.08,73.19 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M139 241.5C157.38 223.12,164.42 225.08,182.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M245 241.5C226.62 223.12,219.58 225.08,201.19 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M267 241.5C285.38 223.12,292.42 225.08,310.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M373 241.5C354.62 223.12,347.58 225.08,329.19 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M395 241.5C413.38 223.12,420.42 225.08,438.81 206.69" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-320 184.5C-320 158.5,-285.38 131.88,-267 113.5" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-192 184.5C-192 158.5,-226.62 131.88,-245 113.5" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-64 184.5C-64 158.5,-29.38 131.88,-11 113.5" stroke-width="1.64"/>
+  <path class="moira-bond" d="M64 184.5C64 158.5,29.38 131.88,11 113.5" stroke-width="1.64"/>
+  <path class="moira-bond" d="M192 184.5C192 158.5,226.62 131.88,245 113.5" stroke-width="1.64"/>
+  <path class="moira-bond" d="M320 184.5C320 158.5,285.38 131.88,267 113.5" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-448 184.5C-448 158.5,-411.58 75.08,-393.19 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-267 91.5C-285.38 73.12,-356.42 75.08,-374.81 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-245 91.5C-226.62 73.12,-155.58 75.08,-137.19 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-11 91.5C-29.38 73.12,-100.42 75.08,-118.81 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M11 91.5C29.38 73.12,100.42 75.08,118.81 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M245 91.5C226.62 73.12,155.58 75.08,137.19 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M267 91.5C285.38 73.12,356.42 75.08,374.81 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M448 184.5C448 158.5,411.58 75.08,393.19 56.69" stroke-width="1.64"/>
+  <path class="moira-bond" d="M-128 34.5C-128 8.5,-29.38 -18.12,-11 -36.5" stroke-width="2.51"/>
+  <path class="moira-bond" d="M128 34.5C128 8.5,29.38 -18.12,11 -36.5" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-384 34.5C-384 8.5,-283.58 -74.92,-265.19 -93.31" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-11 -58.5C-29.38 -76.88,-228.42 -74.92,-246.81 -93.31" stroke-width="2.51"/>
+  <path class="moira-bond" d="M11 -58.5C29.38 -76.88,228.42 -74.92,246.81 -93.31" stroke-width="2.51"/>
+  <path class="moira-bond" d="M384 34.5C384 8.5,283.58 -74.92,265.19 -93.31" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-256 -115.5C-256 -141.5,-27.58 -224.92,-9.19 -243.31" stroke-width="2.51"/>
+  <path class="moira-bond" d="M256 -115.5C256 -141.5,27.58 -224.92,9.19 -243.31" stroke-width="2.51"/>
+</g>
+<g class="moira-legs">
+  <path class="moira-leg" d="M-395 263.5L-413.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-373 263.5L-354.62 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-267 263.5L-285.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-245 263.5L-226.62 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-139 263.5L-157.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-117 263.5L-98.62 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-11 263.5L-29.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M11 263.5L29.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M117 263.5L98.62 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M139 263.5L157.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M245 263.5L226.62 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M267 263.5L285.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M373 263.5L354.62 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M395 263.5L413.38 281.88" stroke-width="1.02"/>
+  <path class="moira-leg" d="M-457.19 206.69L-475.58 225.08" stroke-width="1.02"/>
+  <path class="moira-leg" d="M457.19 206.69L475.58 225.08" stroke-width="1.02"/>
+  <path class="moira-leg" d="M0 -265.5L0 -291.5" stroke-width="2.13"/>
+</g>
+<g class="moira-rings">
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-384 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-256 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-128 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(0 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(128 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(256 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(384 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-448 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-320 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-192 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-64 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(64 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(192 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(320 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(448 197.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-256 102.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(0 102.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(256 102.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-384 47.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-128 47.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(128 47.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(384 47.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(0 -47.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-256 -102.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(256 -102.5) scale(1.17)" stroke="#aa3377"/>
+  <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(0 -252.5) scale(1.17)" stroke="#aa3377"/>
+</g>
+<g class="moira-shapes">
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-384 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-256 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-128 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(0 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(128 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(256 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(384 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-448 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-320 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-192 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-64 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(64 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(192 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(320 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(448 197.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-256 102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(0 102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(256 102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-384 47.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-128 47.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(128 47.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(384 47.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(0 -47.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-256 -102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(256 -102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(0 -252.5)" fill="#ccbb44"/>
+</g>
+<g class="moira-names">
+  <text class="moira-name" x="-384" y="232.5">u1</text>
+  <text class="moira-name" x="-256" y="232.5">u1</text>
+  <text class="moira-name" x="-128" y="232.5">u1</text>
+  <text class="moira-name" x="0" y="232.5">u1</text>
+  <text class="moira-name" x="128" y="232.5">u1</text>
+  <text class="moira-name" x="256" y="232.5">u1</text>
+  <text class="moira-name" x="384" y="232.5">u1</text>
+  <text class="moira-name" x="-448" y="177.5">w1</text>
+  <text class="moira-name" x="-320" y="177.5">w1</text>
+  <text class="moira-name" x="-192" y="177.5">w1</text>
+  <text class="moira-name" x="-64" y="177.5">w1</text>
+  <text class="moira-name" x="64" y="177.5">w1</text>
+  <text class="moira-name" x="192" y="177.5">w1</text>
+  <text class="moira-name" x="320" y="177.5">w1</text>
+  <text class="moira-name" x="448" y="177.5">w1</text>
+  <text class="moira-name" x="-256" y="82.5">u2</text>
+  <text class="moira-name" x="0" y="82.5">u2</text>
+  <text class="moira-name" x="256" y="82.5">u2</text>
+  <text class="moira-name" x="-384" y="27.5">w2</text>
+  <text class="moira-name" x="-128" y="27.5">w2</text>
+  <text class="moira-name" x="128" y="27.5">w2</text>
+  <text class="moira-name" x="384" y="27.5">w2</text>
+  <text class="moira-name" x="0" y="-67.5">u3</text>
+  <text class="moira-name" x="-256" y="-122.5">w3</text>
+  <text class="moira-name" x="256" y="-122.5">w3</text>
+  <text class="moira-name" x="0" y="-272.5">w4</text>
+</g>
+<g class="moira-legend" transform="translate(-475.58 -291.5)">
+  <rect class="moira-legend-box" x="-9" y="-9" width="144" height="84" rx="4"/>
+  <text class="moira-legend-title" x="0" y="10">tag</text>
+  <rect class="moira-legend-swatch" x="0" y="22" width="11" height="11" rx="2" fill="#228833"/>
+  <text class="moira-legend-label" x="17" y="31.5">desemaranhador</text>
+  <rect class="moira-legend-swatch" x="0" y="40" width="11" height="11" rx="2" fill="#aa3377"/>
+  <text class="moira-legend-label" x="17" y="49.5">isometria</text>
+  <rect class="moira-legend-swatch" x="0" y="58" width="11" height="11" rx="2" fill="#ccbb44"/>
+  <text class="moira-legend-label" x="17" y="67.5">mera</text>
+</g>
+</svg>
