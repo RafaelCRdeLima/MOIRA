@@ -81,6 +81,19 @@ function joinIndices(symbols: string[]): string {
   return symbols.join(' ');
 }
 
+/** O símbolo de um tensor em LaTeX, com o número do sítio no expoente e a
+ *  marca de conjugação — sem os índices. O exportador de TikZ usa o mesmo, para
+ *  que o rótulo da figura e o fator da fórmula não divirjam. */
+export function tensorSymbol(
+  name: string,
+  conjugate: boolean,
+  options: FormulaOptions = DEFAULT_OPTIONS,
+): string {
+  const { base, sup } = splitName(name);
+  const marks = [sup, conjugate ? conjugateMark(options) : ''].filter(Boolean).join('');
+  return marks ? `${base}^{${marks}}` : base;
+}
+
 function buildFactor(
   tensor: Tensor,
   name: string,
@@ -95,10 +108,7 @@ function buildFactor(
     return indices ? `\\delta_{${indices}}` : '\\delta';
   }
 
-  const { base, sup } = splitName(name);
-  const marks = [sup, tensor.conjugate ? conjugateMark(options) : ''].filter(Boolean).join('');
-  const head = marks ? `${base}^{${marks}}` : base;
-
+  const head = tensorSymbol(name, tensor.conjugate === true, options);
   return indices ? `${head}_{${indices}}` : head;
 }
 

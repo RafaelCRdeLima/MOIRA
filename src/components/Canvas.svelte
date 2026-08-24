@@ -1,5 +1,6 @@
 <script lang="ts">
   import { displayNames } from '../lib/formula/indices';
+  import { NAME_OFFSET } from '../lib/model/geometry';
   import { t } from '../lib/i18n/index.svelte';
   import { bondMidpoint, bondPath, freeLegPath, legTip, shapeOutline, tipAngle } from '../lib/model/geometry';
   import { bondOfLeg } from '../lib/model/network';
@@ -434,7 +435,7 @@
               d={shapeOutline(tensor.shape, tipAngle(tensor))}
               fill={tensorFill(network, style, tensor)}
             />
-            <text class="moira-name" class:auto={!tensor.name} x="0" y="-20">
+            <text class="moira-name" class:auto={!tensor.name} x="0" y={NAME_OFFSET}>
               {names.get(tensor.id)}{tensor.conjugate ? '†' : ''}
             </text>
           </g>

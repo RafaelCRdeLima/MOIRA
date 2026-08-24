@@ -20,6 +20,7 @@ import {
   bondPath,
   freeLegPath,
   legTip,
+  NAME_OFFSET,
   round,
   SHAPE_RADIUS,
   shapeOutline,
@@ -45,7 +46,6 @@ export interface SvgOptions {
   title?: string;
 }
 
-const NAME_DY = -20;
 const NAME_SIZE = 12;
 /** Largura média de um caractere na mono de 12 px. Serve para a caixa, não
  *  para posicionar: o texto é centralizado pelo próprio SVG. */
@@ -69,6 +69,18 @@ export function toSvg(
       ` width="${caixa.w}" height="${caixa.h}" role="img" aria-label="${escape(options.title ?? 'Rede tensorial')}">`,
   );
   partes.push(`<title>${escape(options.title ?? 'Rede tensorial')}</title>`);
+
+  // Tinta clara sobre transparente some num documento branco, e quem descobre
+  // isso costuma descobrir depois de já ter mandado o PDF ao coautor. O aviso
+  // vai dentro do arquivo, e não só na tela que o produziu: é o arquivo que
+  // viaja. A regra olha a cor de fato, não o tema — o exportador não sabe que
+  // temas existem.
+  if (options.background === false && isLight(cor('var(--c-ink)'))) {
+    partes.push(
+      '<!-- Esta figura tem traço claro e fundo transparente: ela assume um fundo escuro.',
+      '     Num documento de fundo branco, ficará invisível. -->',
+    );
+  }
   partes.push(styleBlock(cor, options.background !== false));
 
   if (options.background !== false) {
@@ -173,7 +185,7 @@ function nameElements(network: Network, names: Map<string, string>): string[] {
     const nome = nameOf(tensor, names);
     if (!nome) continue;
     saida.push(
-      `<text class="moira-name" x="${round(tensor.x)}" y="${round(tensor.y + NAME_DY)}">${escape(nome)}</text>`,
+      `<text class="moira-name" x="${round(tensor.x)}" y="${round(tensor.y + NAME_OFFSET)}">${escape(nome)}</text>`,
     );
   }
   return saida;
@@ -290,8 +302,8 @@ function contentBounds(
     const nome = nameOf(tensor, names);
     if (nome) {
       const meia = (nome.length * NAME_CHAR) / 2;
-      marcar(tensor.x - meia, tensor.y + NAME_DY - NAME_SIZE);
-      marcar(tensor.x + meia, tensor.y + NAME_DY);
+      marcar(tensor.x - meia, tensor.y + NAME_OFFSET - NAME_SIZE);
+      marcar(tensor.x + meia, tensor.y + NAME_OFFSET);
     }
 
     for (const leg of tensor.legs) {
@@ -370,6 +382,24 @@ function styleBlock(cor: (v: string) => string, comFundo: boolean): string {
     `.moira-legend-swatch, .moira-legend-ramp { stroke: ${cor('var(--c-rule)')}; }`,
   ];
   return `<style>\n${regras.map((r) => `  ${r}`).join('\n')}\n</style>`;
+}
+
+/** Luminância relativa aproximada, só para decidir se a tinta é clara. */
+export function isLight(cor: string): boolean {
+  const rgb = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/.exec(cor);
+  const hex = /^#([0-9a-f]{6})$/i.exec(cor.trim());
+  let r: number;
+  let g: number;
+  let b: number;
+  if (rgb) {
+    [r, g, b] = [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
+  } else if (hex) {
+    const n = parseInt(hex[1]!, 16);
+    [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  } else {
+    return false;
+  }
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.55;
 }
 
 function escape(texto: string): string {

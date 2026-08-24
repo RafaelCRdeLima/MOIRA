@@ -49,10 +49,10 @@
   <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-32 88)" fill="#4477aa"/>
   <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(32 88)" fill="#4477aa"/>
   <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(96 88)" fill="#4477aa"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-96 0)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-32 0)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(32 0)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(96 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-96 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-32 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(32 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(96 0)" fill="#ccbb44"/>
   <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-96 -88)" fill="#228833"/>
   <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-32 -88)" fill="#228833"/>
   <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(32 -88)" fill="#228833"/>

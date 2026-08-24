@@ -73,13 +73,13 @@
   <path class="moira-leg" d="M0 -265.5L0 -291.5" stroke-width="2.13"/>
 </g>
 <g class="moira-rings">
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-384 252.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-256 252.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-128 252.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(0 252.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(128 252.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(256 252.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(384 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-384 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-256 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-128 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(0 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(128 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(256 252.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(384 252.5) scale(1.17)" stroke="#228833"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-448 197.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-320 197.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-192 197.5) scale(1.17)" stroke="#aa3377"/>
@@ -88,26 +88,26 @@
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(192 197.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(320 197.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(448 197.5) scale(1.17)" stroke="#aa3377"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(-256 102.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(0 102.5) scale(1.17)" stroke="#228833"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(256 102.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-256 102.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(0 102.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(256 102.5) scale(1.17)" stroke="#228833"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-384 47.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-128 47.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(128 47.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(384 47.5) scale(1.17)" stroke="#aa3377"/>
-  <path class="moira-ring" d="M-11 -11H11V11H-11Z" transform="translate(0 -47.5) scale(1.17)" stroke="#228833"/>
+  <path class="moira-ring" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(0 -47.5) scale(1.17)" stroke="#228833"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-256 -102.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(256 -102.5) scale(1.17)" stroke="#aa3377"/>
   <path class="moira-ring" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(0 -252.5) scale(1.17)" stroke="#aa3377"/>
 </g>
 <g class="moira-shapes">
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-384 252.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-256 252.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-128 252.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(0 252.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(128 252.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(256 252.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(384 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-384 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-256 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-128 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(0 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(128 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(256 252.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(384 252.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-448 197.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-320 197.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-192 197.5)" fill="#ccbb44"/>
@@ -116,14 +116,14 @@
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(192 197.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(320 197.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(448 197.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-256 102.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(0 102.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(256 102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(-256 102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(0 102.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(256 102.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-384 47.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-128 47.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(128 47.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(384 47.5)" fill="#ccbb44"/>
-  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(0 -47.5)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11L11 -11L11 11L-11 11Z" transform="translate(0 -47.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(-256 -102.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(256 -102.5)" fill="#ccbb44"/>
   <path class="moira-shape shape-triangle" d="M0 -13L11.26 6.5L-11.26 6.5Z" transform="translate(0 -252.5)" fill="#ccbb44"/>

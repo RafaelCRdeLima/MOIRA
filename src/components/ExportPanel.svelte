@@ -1,16 +1,29 @@
 <script lang="ts">
   import { cssColorResolver, fileName, saveText } from '../lib/export/colors';
-  import { toSvg } from '../lib/export/svg';
+  import { isLight, toSvg } from '../lib/export/svg';
+  import { toTikz } from '../lib/export/tikz';
   import { displayNames } from '../lib/formula/indices';
   import { t, type StringKey } from '../lib/i18n/index.svelte';
   import { buildLegend } from '../lib/render/legend';
   import { computeStyle } from '../lib/render/style';
   import { session } from '../state/session.svelte';
+  import { theme } from '../state/theme.svelte';
 
   let comFundo = $state(true);
   let comLegenda = $state(true);
+  /** Documento completo compila direto; trecho se cola num artigo existente. */
+  let documentoCompleto = $state(true);
 
   const vazia = $derived(session.network.tensors.length === 0);
+
+  /** Traço claro sem fundo some num documento branco. Olha a cor de verdade,
+   *  e não o seletor de tema: uma paleta manual clara cai no mesmo caso. */
+  const tintaClara = $derived.by(() => {
+    void theme.mode; // reavalia quando o tema muda
+    if (typeof document === 'undefined') return false;
+    return isLight(cssColorResolver()('var(--c-ink)'));
+  });
+  const somemNoBranco = $derived(!comFundo && tintaClara);
 
   function exportarSvg() {
     const network = $state.snapshot(session.network) as typeof session.network;
@@ -24,6 +37,17 @@
       title: network.meta.title || 'Rede tensorial',
     });
     saveText(fileName(network.meta.title, 'svg'), svg, 'image/svg+xml');
+  }
+
+  function exportarTikz() {
+    const network = $state.snapshot(session.network) as typeof session.network;
+    const tex = toTikz(network, computeStyle(network), {
+      resolveColor: cssColorResolver(),
+      names: displayNames(network),
+      title: network.meta.title || 'Rede tensorial',
+      standalone: documentoCompleto,
+    });
+    saveText(fileName(network.meta.title, 'tex'), tex, 'text/x-tex');
   }
 </script>
 
@@ -39,6 +63,11 @@
     <span>{t('export.background')}</span>
   </label>
 
+  <label class="check">
+    <input type="checkbox" bind:checked={documentoCompleto} />
+    <span>{t('export.standalone')}</span>
+  </label>
+
   <div class="botoes">
     <button type="button" disabled={vazia} onclick={exportarSvg}>
       <svg class="ic" width="16" height="16" aria-hidden="true">
@@ -46,9 +75,19 @@
       </svg>
       SVG
     </button>
+    <button type="button" disabled={vazia} onclick={exportarTikz}>
+      <svg class="ic" width="16" height="16" aria-hidden="true">
+        <use href="/assets/moira-icones.svg#ic-exportar" />
+      </svg>
+      TikZ
+    </button>
   </div>
 
-  <p class="nota">{t('export.themeNote')}</p>
+  {#if somemNoBranco}
+    <p class="aviso">{t('export.darkWarning')}</p>
+  {:else}
+    <p class="nota">{t('export.themeNote')}</p>
+  {/if}
 </section>
 
 <style>
@@ -103,6 +142,12 @@
   .nota {
     margin: var(--step-2) 0 0;
     color: var(--c-muted);
+    font-size: 11px;
+  }
+
+  .aviso {
+    margin: var(--step-2) 0 0;
+    color: var(--c-warning);
     font-size: 11px;
   }
 </style>

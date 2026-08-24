@@ -13,3 +13,8 @@ dist/
 # O artigo que originou o projeto está citado no README (arXiv:2402.01790).
 refs/*.pdf
 scripts/.cache/
+
+# Subprodutos do pdflatex e renderizações; os .tex, .svg e .pdf ficam versionados.
+scripts/fixtures/exportado/*.aux
+scripts/fixtures/exportado/*.log
+scripts/fixtures/exportado/*.png

@@ -15,6 +15,7 @@ import path from 'node:path';
 import { promisify } from 'node:util';
 
 import { toSvg } from '../src/lib/export/svg';
+import { toTikz } from '../src/lib/export/tikz';
 import { displayNames } from '../src/lib/formula/indices';
 import { mera, sandwich } from '../src/lib/generators/index';
 import { emptyNetwork } from '../src/lib/model/network';
@@ -91,6 +92,7 @@ function comoRede(f: { tensors: Network['tensors']; bonds: Network['bonds'] }): 
 }
 
 const RSVG = (process.env['MOIRA_RSVG'] ?? 'rsvg-convert').split(/\s+/);
+const LATEX = (process.env['MOIRA_LATEX'] ?? 'pdflatex').split(/\s+/);
 const cor = paletaDoCss();
 const traduzir = (k: string) => k.split('.').pop()!;
 
@@ -100,7 +102,7 @@ const CASOS: [string, () => Network][] = [
 ];
 
 mkdirSync(DESTINO, { recursive: true });
-console.log('\nExportação SVG, conferida fora do navegador\n');
+console.log('\nExportação conferida fora do aplicativo\n');
 
 let falhas = 0;
 let pendentes = 0;
@@ -108,6 +110,8 @@ let pendentes = 0;
 for (const [nome, construir] of CASOS) {
   const network = construir();
   const style = computeStyle(network);
+
+  // ── SVG, desenhado pelo librsvg ───────────────────────────────────────────
   const svg = toSvg(network, style, {
     resolveColor: cor,
     translate: traduzir,
@@ -115,38 +119,75 @@ for (const [nome, construir] of CASOS) {
     legend: buildLegend(network, style),
     title: nome,
   });
-
-  const arquivo = path.join(DESTINO, `${nome}.svg`);
-  writeFileSync(arquivo, `${svg}\n`);
+  const arquivoSvg = path.join(DESTINO, `${nome}.svg`);
+  writeFileSync(arquivoSvg, `${svg}\n`);
 
   const cru = /var\(--|color-mix\(/.exec(svg);
   if (cru) {
-    console.log(`  ✗ ${nome}: sobrou ${cru[0]} sem resolver no arquivo`);
+    console.log(`  ✗ ${nome}.svg: sobrou ${cru[0]} sem resolver no arquivo`);
     falhas += 1;
-    continue;
-  }
-
-  try {
-    const png = path.join(DESTINO, `${nome}.png`);
-    await executar(RSVG[0]!, [...RSVG.slice(1), '-f', 'png', '-o', png, arquivo], {
-      timeout: 60_000,
-    });
-    console.log(`  ✓ ${nome}: ${svg.length} bytes, desenhado pelo librsvg`);
-  } catch (erro) {
-    const mensagem = erro instanceof Error ? erro.message : String(erro);
-    if (/ENOENT/.test(mensagem)) {
-      console.log(`  · ${nome}: rsvg-convert não está instalado — pendente`);
+  } else {
+    const r = await rodar(RSVG, [
+      '-f',
+      'png',
+      '-o',
+      path.join(DESTINO, `${nome}.svg.png`),
+      arquivoSvg,
+    ]);
+    if (r === 'ok') console.log(`  ✓ ${nome}.svg: ${svg.length} bytes, desenhado pelo librsvg`);
+    else if (r === 'ausente') {
+      console.log(`  · ${nome}.svg: rsvg-convert não está instalado — pendente`);
       pendentes += 1;
     } else {
-      console.log(`  ✗ ${nome}: ${mensagem.split('\n').slice(0, 2).join(' ').slice(0, 200)}`);
+      console.log(`  ✗ ${nome}.svg: ${r}`);
       falhas += 1;
     }
+  }
+
+  // ── TikZ, compilado por pdflatex ──────────────────────────────────────────
+  const tex = toTikz(network, style, {
+    resolveColor: cor,
+    names: displayNames(network),
+    title: nome,
+  });
+  const arquivoTex = path.join(DESTINO, `${nome}.tex`);
+  writeFileSync(arquivoTex, `${tex}\n`);
+
+  const r = await rodar(LATEX, [
+    '-interaction=nonstopmode',
+    '-halt-on-error',
+    `-output-directory=${DESTINO}`,
+    arquivoTex,
+  ]);
+  if (r === 'ok') {
+    console.log(`  ✓ ${nome}.tex: ${tex.length} bytes, compilado em pdflatex sem edição`);
+  } else if (r === 'ausente') {
+    console.log(`  · ${nome}.tex: pdflatex não está instalado — pendente`);
+    pendentes += 1;
+  } else {
+    console.log(`  ✗ ${nome}.tex: ${r}`);
+    falhas += 1;
   }
 }
 
 console.log(
-  `\n${falhas === 0 ? 'A exportação abre fora do navegador.' : `${falhas} caso(s) falharam.`}` +
+  `\n${falhas === 0 ? 'A exportação abre e compila fora do aplicativo.' : `${falhas} caso(s) falharam.`}` +
     (pendentes > 0 ? ` ${pendentes} pendente(s).` : '') +
     `\nArquivos em ${path.relative(process.cwd(), DESTINO)}\n`,
 );
 process.exit(falhas === 0 ? 0 : 1);
+
+/** 'ok', 'ausente' quando a ferramenta não existe, ou a mensagem de erro. */
+async function rodar(comando: string[], args: string[]): Promise<string> {
+  try {
+    await executar(comando[0]!, [...comando.slice(1), ...args], { timeout: 120_000 });
+    return 'ok';
+  } catch (erro) {
+    const mensagem = erro instanceof Error ? erro.message : String(erro);
+    if (/ENOENT/.test(mensagem)) return 'ausente';
+    // O pdflatex escreve o motivo no meio de páginas de log; a linha do erro
+    // começa com "!" e é a única que interessa.
+    const linha = mensagem.split('\n').find((l) => l.startsWith('!'));
+    return (linha ?? mensagem.split('\n').slice(0, 2).join(' ')).slice(0, 200);
+  }
+}

@@ -123,6 +123,8 @@ export const en: Dictionary = {
   'export.title': 'Export',
   'export.legend': 'include legend',
   'export.background': 'include background',
+  'export.standalone': 'TikZ as a complete document',
+  'export.darkWarning': 'Light ink on a transparent background: the figure will be invisible on a white document.',
   'export.themeNote': 'The file comes out in the theme currently on screen.',
   'code.title': 'Code',
   'code.examples': 'include example tensors',

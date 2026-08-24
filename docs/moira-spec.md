@@ -422,6 +422,28 @@ Os aceites de marco são verificados em navegador, por roteiros em `e2e/`, fora
 do `npm test`. Os erros que mais importam nesta aplicação — captura de ponteiro,
 alvo de gesto, cor computada — não aparecem em teste de unidade.
 
+**O verificador tem de ser independente do produtor.** Três defeitos seguidos
+saíram da mesma raiz: o ambiente que produzia a saída também a aceitava, e por
+isso a escondia.
+
+- O `np.einsum` sem `optimize` estava sintaticamente perfeito e não terminava.
+  Ler o código não mostrava nada; executá-lo, sim.
+- O `ncon` do `TensorOperations.jl` aceitou em silêncio um argumento posicional
+  com o significado errado, e a mensagem de erro apontava para outro lugar. Só
+  a biblioteca canônica — não uma reimplementação nossa da convenção — podia
+  pegar isso.
+- O SVG saía com `color-mix(...)` no traço. O Chrome resolvia e desenhava certo;
+  o `librsvg`, que é o motor do Inkscape, não entende `color-mix` e deixaria a
+  legenda sem contorno.
+
+Daí a regra: toda saída que deixa o programa é conferida por uma ferramenta que
+não participou de produzi-la — o intérprete real de cada dialeto, a biblioteca
+canônica da convenção, um renderizador que não seja o navegador em que a figura
+foi feita. Escrever a nossa própria versão do verificador é comparar o programa
+com a nossa leitura da especificação dele, que é exatamente o erro que se quer
+pegar. Onde a ferramenta independente não existir no ambiente, a pendência fica
+registrada em vez de substituída por uma aproximação.
+
 ### 14.1 Validação numérica
 
 O critério original do M3 dizia que o `ncon` gerado "roda e bate com o `quimb`,

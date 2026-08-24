@@ -80,6 +80,38 @@ export async function executar(navegador) {
   );
   await page.locator('header select').first().selectOption('light');
 
+  // ── TikZ ────────────────────────────────────────────────────────────────
+  const tex = await baixar(page, () => page.getByRole('button', { name: 'TikZ' }).click());
+  relatorio.confere('o TikZ sai com extensão .tex', tex.nome.endsWith('.tex'), tex.nome);
+  relatorio.confere(
+    'documento completo, pronto para pdflatex',
+    tex.conteudo.includes('\\documentclass[tikz,border=6pt]{standalone}') &&
+      tex.conteudo.includes('\\end{document}'),
+  );
+  relatorio.confere(
+    'posições em coordenadas nomeadas, uma por tensor',
+    (tex.conteudo.match(/\\coordinate \(/g) ?? []).length === 12,
+  );
+  relatorio.confere(
+    'cores por \\definecolor, com os nomes da identidade',
+    tex.conteudo.includes('\\definecolor{moiraInk}{HTML}{1B2430}') &&
+      !/(?:draw|fill)=(?:#|rgb)/.test(tex.conteudo),
+  );
+  relatorio.confere(
+    'rótulos em modo matemático',
+    tex.conteudo.includes('{$A^{[1]\\dagger}$}'),
+  );
+
+  await page.getByLabel('TikZ como documento completo').uncheck();
+  await page.waitForTimeout(150);
+  const trecho = await baixar(page, () => page.getByRole('button', { name: 'TikZ' }).click());
+  relatorio.confere(
+    'como trecho, traz o preâmbulo necessário em comentário',
+    !trecho.conteudo.includes('\\documentclass') &&
+      trecho.conteudo.includes('%   \\usetikzlibrary{calc}'),
+  );
+  await page.getByLabel('TikZ como documento completo').check();
+
   relatorio.semErros([...erros, ...errosSvg]);
   await page.close();
   return relatorio;

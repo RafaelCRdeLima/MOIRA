@@ -12,6 +12,11 @@ export interface Point {
   y: number;
 }
 
+/** Deslocamento vertical do rótulo em relação ao centro do tensor: a linha de
+ *  base do texto fica acima da forma. Mora aqui, e não em cada desenhista,
+ *  porque o canvas, o SVG e o TikZ precisam pôr o nome no mesmo lugar. */
+export const NAME_OFFSET = -20;
+
 /** Meia-largura de cada forma, em unidades do canvas. */
 export const SHAPE_RADIUS: Record<Shape, number> = {
   circle: 12,
@@ -124,28 +129,49 @@ export function bondMidpoint(network: Network, bond: Bond): Point | undefined {
   };
 }
 
-/** Contorno da forma, centrado na origem — quem posiciona é o `transform` do grupo. */
-export function shapeOutline(shape: Shape, tipAngle = 0): string {
+/** Vértices da forma, centrados na origem. Círculo e ponto não têm vértice e
+ *  devolvem null — quem desenha usa o raio.
+ *
+ *  Existe para que o exportador de TikZ não recalcule o triângulo por conta
+ *  própria: o contorno do SVG e o caminho do TikZ saem daqui, e não podem
+ *  discordar de meio grau. */
+export function shapeVertices(shape: Shape, tipAngle = 0): Point[] | null {
   const r = SHAPE_RADIUS[shape];
   switch (shape) {
     case 'square':
-      return `M${-r} ${-r}H${r}V${r}H${-r}Z`;
+      return [
+        { x: -r, y: -r },
+        { x: r, y: -r },
+        { x: r, y: r },
+        { x: -r, y: r },
+      ];
     case 'diamond':
-      return `M0 ${-r}L${r} 0L0 ${r}L${-r} 0Z`;
-    case 'triangle': {
-      // Vértices do triângulo equilátero inscrito, com um deles no ângulo da ponta.
-      const pts = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((d) => ({
-        x: Math.cos(tipAngle + d) * r,
-        y: Math.sin(tipAngle + d) * r,
+      return [
+        { x: 0, y: -r },
+        { x: r, y: 0 },
+        { x: 0, y: r },
+        { x: -r, y: 0 },
+      ];
+    case 'triangle':
+      // Equilátero inscrito, com um vértice no ângulo da ponta.
+      return [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((d) => ({
+        x: round(Math.cos(tipAngle + d) * r),
+        y: round(Math.sin(tipAngle + d) * r),
       }));
-      return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${round(p.x)} ${round(p.y)}`).join('') + 'Z';
-    }
-    default: {
-      // Círculo e ponto como duas semicircunferências: um só tipo de nó no SVG.
-      const rr = SHAPE_RADIUS[shape];
-      return `M${-rr} 0A${rr} ${rr} 0 1 0 ${rr} 0A${rr} ${rr} 0 1 0 ${-rr} 0Z`;
-    }
+    default:
+      return null;
   }
+}
+
+/** Contorno da forma, centrado na origem — quem posiciona é o `transform` do grupo. */
+export function shapeOutline(shape: Shape, tipAngle = 0): string {
+  const vertices = shapeVertices(shape, tipAngle);
+  if (vertices) {
+    return vertices.map((p, i) => `${i === 0 ? 'M' : 'L'}${round(p.x)} ${round(p.y)}`).join('') + 'Z';
+  }
+  // Círculo e ponto como duas semicircunferências: um só tipo de nó no SVG.
+  const r = SHAPE_RADIUS[shape];
+  return `M${-r} 0A${r} ${r} 0 1 0 ${r} 0A${r} ${r} 0 1 0 ${-r} 0Z`;
 }
 
 /** Ângulo da ponta do triângulo, tirado da perna marcada em `isometryTip`. */

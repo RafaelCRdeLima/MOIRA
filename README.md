@@ -34,6 +34,16 @@ contrai cada rede pela ordem escolhida e compara com a força bruta; a de fora,
 em [`scripts/`](scripts/), confere a convenção do `ncon` contra o `numpy` e roda
 o código gerado em cada dialeto para garantir que ele funciona ao colar.
 
+## Exportação
+
+SVG e TikZ, do painel lateral. O SVG sai com classes por papel e texto como
+texto, para ser editável no Inkscape; o TikZ sai com as posições em coordenadas
+nomeadas e as cores em `\definecolor`, para ser ajustável dentro do LaTeX —
+mover um tensor é mudar uma linha, e trocar a paleta inteira é mudar o
+preâmbulo. `npm run verifica-exportacao` confere os dois com ferramentas que não
+participaram de produzi-los: o `librsvg` desenha os SVG e o `pdflatex` compila
+os TikZ.
+
 ## Por que exportar do MOIRA e não desenhar pela biblioteca
 
 O `quimb` sabe desenhar uma rede tensorial, e o `.draw()` dele é útil — mas usa

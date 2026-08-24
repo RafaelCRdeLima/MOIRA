@@ -123,6 +123,8 @@ export const pt = {
   'export.title': 'Exportar',
   'export.legend': 'incluir legenda',
   'export.background': 'incluir fundo',
+  'export.standalone': 'TikZ como documento completo',
+  'export.darkWarning': 'Traço claro sobre fundo transparente: a figura fica invisível num documento branco.',
   'export.themeNote': 'O arquivo sai no tema que estiver na tela.',
   'code.title': 'Código',
   'code.examples': 'incluir tensores de exemplo',

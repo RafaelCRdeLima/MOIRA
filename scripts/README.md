@@ -62,14 +62,17 @@ um `ncon` próprio para testar o gerador seria comparar o programa com a nossa
 leitura da convenção, que é exatamente o que deixaria passar um erro como o do
 `order=` no dialeto de Julia.
 
-## A exportação abre fora do navegador
+## A exportação abre e compila fora do aplicativo
 
 ```sh
 npm run verifica-exportacao
 MOIRA_RSVG='micromamba run -n moira-svg rsvg-convert' npm run verifica-exportacao
 ```
 
-Exporta o sanduíche e a MERA e manda o `librsvg` desenhá-los. O `librsvg` é o
+Exporta o sanduíche e a MERA nos dois formatos: manda o `librsvg` desenhar os
+SVG e o `pdflatex` compilar os TikZ. Os `.svg`, `.tex` e `.pdf` ficam
+versionados em `fixtures/exportado/` — é o que abre no Inkscape para conferir à
+mão, e é o PDF que prova que o TikZ compila sem edição. O `librsvg` é o
 motor do Inkscape e do GNOME, não compartilha código com o Chrome e é mais
 rigoroso: um SVG que ele desenha é um SVG válido, não um SVG que um navegador
 tolerou. É o equivalente, para a figura, do que rodar o `ncon.m` canônico foi
@@ -77,6 +80,8 @@ para o código.
 
 ```sh
 micromamba create -y -n moira-svg -c conda-forge librsvg
+# pdflatex: texlive-latex-base + texlive-pictures na distribuição, ou
+# MOIRA_LATEX apontando para outro compilador.
 ```
 
 As cores saem do próprio `tokens.css`, lido pelo script — não há uma segunda
