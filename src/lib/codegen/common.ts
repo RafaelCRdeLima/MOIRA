@@ -164,6 +164,10 @@ export function exampleBlock(
   const temConjugado = net.tensors.some((t) => t.conjugate);
   return [
     `${marca} Example data — replace with your own tensors.`,
+    // Quem roda dois dialetos e compara os números suspeita do programa. O
+    // aviso custa uma linha e evita um relatório de defeito que não é defeito.
+    `${marca} Each language draws its own random numbers, so the value printed`,
+    `${marca} here is NOT comparable across dialects. Only your own data is.`,
     ...(temConjugado
       ? [`${marca} Conjugate tensors get independent random data here, not the`,
          `${marca} conjugate of their partner — MOIRA marks that a tensor is`,

@@ -8,7 +8,7 @@
  */
 
 import { execFile } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
@@ -22,6 +22,31 @@ import { validate } from '../src/lib/validate/checks';
 
 const executar = promisify(execFile);
 const DESTINO = path.resolve(import.meta.dirname, 'fixtures/gerado');
+const CACHE = path.resolve(import.meta.dirname, '.cache');
+
+/** O `ncon.m` canônico é de terceiros — Pfeifer, Evenbly, Singh & Vidal,
+ *  arXiv:1402.0939 — e não vai no repositório. Baixa uma vez para o cache.
+ *
+ *  Usar o de verdade é o ponto: escrever um `ncon` próprio para testar o
+ *  gerador seria comparar o programa com a minha leitura da convenção, que é
+ *  exatamente o que deixou passar o erro do `order=` no dialeto de Julia. */
+async function buscaNcon(): Promise<boolean> {
+  const destino = path.join(CACHE, 'ncon.m');
+  if (existsSync(destino)) return true;
+  mkdirSync(CACHE, { recursive: true });
+  try {
+    const resposta = await fetch('https://arxiv.org/src/1402.0939', {
+      signal: AbortSignal.timeout(60_000),
+    });
+    if (!resposta.ok) return false;
+    const tgz = path.join(CACHE, 'ncon-src.tar.gz');
+    writeFileSync(tgz, Buffer.from(await resposta.arrayBuffer()));
+    await executar('tar', ['-xzf', tgz, '-C', CACHE, 'ncon.m']);
+    return existsSync(destino);
+  } catch {
+    return false;
+  }
+}
 
 const EXTENSAO: Record<Dialect, string> = {
   'ncon-matlab': 'm',
@@ -34,13 +59,19 @@ const EXTENSAO: Record<Dialect, string> = {
 /** Quem sabe rodar cada dialeto neste ambiente. `MOIRA_PYTHON` aponta para um
  *  interpretador com quimb instalado, quando ele não estiver no do sistema. */
 const PYTHON = process.env['MOIRA_PYTHON'] ?? 'python3';
+/** `MOIRA_OCTAVE` aceita comando com argumentos, para quem tem o Octave num
+ *  ambiente isolado: `MOIRA_OCTAVE='micromamba run -n moira-octave octave'`. */
+const OCTAVE = (process.env['MOIRA_OCTAVE'] ?? 'octave').split(/\s+/);
 
 const EXECUTOR: Partial<Record<Dialect, { comando: string; args: (arquivo: string) => string[] }>> = {
   einsum: { comando: PYTHON, args: (a) => [a] },
   quimb: { comando: PYTHON, args: (a) => [a] },
   'ncon-julia': { comando: 'julia', args: (a) => [a] },
   itensor: { comando: 'julia', args: (a) => [a] },
-  'ncon-matlab': { comando: 'octave', args: (a) => ['--no-gui', '--quiet', a] },
+  'ncon-matlab': {
+    comando: OCTAVE[0]!,
+    args: (a) => [...OCTAVE.slice(1), '--no-gui', '--quiet', '--path', CACHE, a],
+  },
 };
 
 /** Biblioteca ausente não é defeito do código gerado: é ambiente. Fica
@@ -61,7 +92,9 @@ const path_ = findPath(net);
 const diagnostics = validate(rede);
 
 mkdirSync(DESTINO, { recursive: true });
-console.log(`\nRede: sanduíche de 4 sítios — ${net.tensors.length} tensores, escalar na saída.\n`);
+const temNcon = await buscaNcon();
+console.log(`\nRede: sanduíche de 4 sítios — ${net.tensors.length} tensores, escalar na saída.`);
+console.log(temNcon ? '' : 'ncon.m não pôde ser baixado; o dialeto MATLAB fica pendente.\n');
 
 let falhas = 0;
 let pendentes = 0;
@@ -76,6 +109,12 @@ for (const dialect of Object.keys(EXTENSAO) as Dialect[]) {
 
   const arquivo = path.join(DESTINO, `sanduiche-4.${dialect}.${EXTENSAO[dialect]}`);
   writeFileSync(arquivo, `${gerado.source}\n`);
+
+  if (dialect === 'ncon-matlab' && !temNcon) {
+    console.log(`  · ${dialect}: gravado, sem o ncon.m para executar`);
+    pendentes += 1;
+    continue;
+  }
 
   const executor = EXECUTOR[dialect];
   if (!executor) {

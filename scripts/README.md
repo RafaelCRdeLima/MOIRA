@@ -29,13 +29,38 @@ E rodar de verdade pegou dois defeitos que nenhum teste de unidade pegaria:
   na posição, o erro era "number of tensors and of index lists should be the
   same", que não diz nada sobre a causa.
 
-| dialeto | estado neste ambiente |
+| dialeto | estado |
 |---|---|
 | `numpy.einsum` | roda, imprime o escalar |
-| `quimb` | roda, imprime o escalar (`MOIRA_PYTHON` apontando para um ambiente com quimb) |
+| `quimb` | roda, imprime o escalar |
 | `ncon` (Julia) | roda, imprime o escalar |
 | `ITensor` | roda, imprime o escalar |
-| `ncon` (MATLAB) | **pendente** — nem MATLAB nem Octave disponíveis, e instalar exige privilégio que não há aqui |
+| `ncon` (MATLAB) | roda no Octave, com o `ncon.m` canônico, imprime o escalar |
+
+### O que o ambiente precisa ter
+
+Nada disso é dependência do projeto — são intérpretes de terceiros, instalados
+uma vez por quem for verificar.
+
+```sh
+# quimb, num ambiente à parte
+python3 -m venv ~/.venv/moira && ~/.venv/moira/bin/pip install quimb
+export MOIRA_PYTHON=~/.venv/moira/bin/python
+
+# Julia
+julia -e 'using Pkg; Pkg.add(["TensorOperations","ITensors"])'
+
+# Octave, sem privilégio de administrador
+micromamba create -y -n moira-octave -c conda-forge octave
+export MOIRA_OCTAVE='micromamba run -n moira-octave octave'
+```
+
+O `ncon.m` do MATLAB é de terceiros — Pfeifer, Evenbly, Singh & Vidal,
+[arXiv:1402.0939](https://arxiv.org/abs/1402.0939) — e o script o baixa uma vez
+para `.cache/`, que não vai no repositório. Usar o canônico é o ponto: escrever
+um `ncon` próprio para testar o gerador seria comparar o programa com a nossa
+leitura da convenção, que é exatamente o que deixaria passar um erro como o do
+`order=` no dialeto de Julia.
 
 ## Camada B da validação numérica
 

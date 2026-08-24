@@ -168,14 +168,28 @@ Invariantes garantidos pelo modelo a todo momento:
   das duas seria escolher um lado em silêncio. Para desenhar e para calcular
   custo, a dimensão ausente no vínculo cai para a da perna que a declarar.
 
-**Agrupamento de pernas fica para o M4.** A notação agrupa e divide pernas
-(`rearrange(T, 'i j k l -> (i l) (k j)')`), e `Leg` não representa isso. A
-decisão é deliberada: enfiar agrupamento no modelo durante o M3 contaminaria a
-geração de fórmula, a geração de código e a busca de ordem ao mesmo tempo. No M3,
-o parser de `einsum` **recusa parênteses** com mensagem explícita ("agrupamento
-de índices ainda não suportado") em vez de interpretá-los errado. No M4 o
-agrupamento entra como `LegGroup` no tensor — lista ordenada de ids de perna — de
-forma aditiva, sem migração.
+**Relações entre tensores que o modelo não expressa.** Duas dívidas da mesma
+classe, e vale tratá-las juntas.
+
+`conjugate?: boolean` diz que um tensor **é** conjugado, não **de quem**. Numa
+rede de verdade isso importa: em `⟨ψ|O|ψ⟩`, cada `A†` é o conjugado do `A`
+correspondente — é o mesmo tensor, não outro. O código gerado hoje declara os
+dois como arrays independentes, o que roda e dá um número, mas não é o número
+que a rede representa. Quem cola o trecho e preenche com dados de verdade tem de
+saber disso, e por isso o cabeçalho o diz; mas a limitação é do §5, não do
+gerador. A correção é um campo `conjugateOf?: string` — id do tensor de que este
+é o conjugado —, e com ele o gerador emite `np.conj(A1)` em vez de pedir um
+`A1c` à parte.
+
+`Leg` não representa agrupamento de pernas (`rearrange(T, 'i j k l -> (i l) (k
+j)')`), que a notação usa. A correção é um `LegGroup` no tensor: lista ordenada
+de ids de perna.
+
+Os dois campos são aditivos e opcionais, e entram juntos no M4 — a versão de
+esquema não sobe. Até lá, o parser de `einsum` **recusa parênteses** com
+mensagem explícita ("agrupamento de índices ainda não suportado") em vez de
+interpretá-los errado, e o código gerado documenta que os slots marcados como
+conjugados esperam os dados já conjugados.
 
 **Versão de esquema.** Campo novo que seja opcional e aditivo não sobe a versão:
 um arquivo antigo continua abrindo e um arquivo novo continua sendo lido por
@@ -392,11 +406,9 @@ para não ser descoberto durante o marco.
 **M5 — lançamento.** Tutorial, deploy no Cloudflare Pages, README creditando
 Penrose pela notação e as referências de escopo.
 
-Pendência herdada: o dialeto `ncon` para MATLAB é o único que nunca foi
-executado — nem MATLAB nem Octave estão disponíveis no ambiente de
-desenvolvimento, e instalar exige privilégio que não há ali. Os outros quatro
-rodam ao colar, conferidos por `scripts/verifica-codigo.ts`. Resolver antes do
-lançamento.
+Os cinco dialetos são executados por `scripts/verifica-codigo.ts` e imprimem o
+escalar sem edição — inclusive o `ncon` de MATLAB, no Octave, com o `ncon.m`
+canônico dos autores da convenção.
 
 ## 14. Testes
 

@@ -10,6 +10,8 @@ import numpy as np
 import quimb.tensor as qtn
 
 # Example data — replace with your own tensors.
+# Each language draws its own random numbers, so the value printed
+# here is NOT comparable across dialects. Only your own data is.
 # Conjugate tensors get independent random data here, not the
 # conjugate of their partner — MOIRA marks that a tensor is
 # conjugated, not whose conjugate it is.

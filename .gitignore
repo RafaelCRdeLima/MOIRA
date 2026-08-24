@@ -12,3 +12,4 @@ dist/
 # referências externas: PDFs de terceiros ficam fora do repositório.
 # O artigo que originou o projeto está citado no README (arXiv:2402.01790).
 refs/*.pdf
+scripts/.cache/
