@@ -120,6 +120,10 @@ export const en: Dictionary = {
   'formula.emptyNetwork': 'No tensors, no formula.',
   'formula.error': 'The expression did not compile:',
 
+  'export.title': 'Export',
+  'export.legend': 'include legend',
+  'export.background': 'include background',
+  'export.themeNote': 'The file comes out in the theme currently on screen.',
   'code.title': 'Code',
   'code.examples': 'include example tensors',
   'code.copy': 'Copy',

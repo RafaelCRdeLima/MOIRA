@@ -120,6 +120,10 @@ export const pt = {
   'formula.emptyNetwork': 'Sem tensores, sem fórmula.',
   'formula.error': 'A expressão não compilou:',
 
+  'export.title': 'Exportar',
+  'export.legend': 'incluir legenda',
+  'export.background': 'incluir fundo',
+  'export.themeNote': 'O arquivo sai no tema que estiver na tela.',
   'code.title': 'Código',
   'code.examples': 'incluir tensores de exemplo',
   'code.copy': 'Copiar',

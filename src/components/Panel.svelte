@@ -3,6 +3,7 @@
   import { session } from '../state/session.svelte';
   import BondInspector from './BondInspector.svelte';
   import ColorPanel from './ColorPanel.svelte';
+  import ExportPanel from './ExportPanel.svelte';
   import Generators from './Generators.svelte';
   import Inspector from './Inspector.svelte';
 
@@ -44,6 +45,8 @@
     {/if}
 
     <ColorPanel />
+
+    <ExportPanel />
 
     <Generators />
 

@@ -9,6 +9,7 @@ import { executar as m1 } from './m1-mera-e-gestos.mjs';
 import { executar as m2 } from './m2-cor.mjs';
 import { executar as m3a } from './m3a-formula.mjs';
 import { executar as m3b } from './m3b-contracao.mjs';
+import { executar as m4 } from './m4-exportacao.mjs';
 
 const ROTEIROS = [
   ['m0', m0],
@@ -16,6 +17,7 @@ const ROTEIROS = [
   ['m2', m2],
   ['m3a', m3a],
   ['m3b', m3b],
+  ['m4', m4],
 ];
 
 const pedidos = process.argv.slice(2);

@@ -1,0 +1,91 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SVG exportado > instantâneo do sanduíche de 4 sítios 1`] = `
+"<svg xmlns="http://www.w3.org/2000/svg" viewBox="-135 -144 270 271" width="270" height="271" role="img" aria-label="teste">
+<title>teste</title>
+<style>
+  .moira-paper { fill: #ffffff; }
+  .moira-bond { fill: none; stroke: #1b2430; stroke-linecap: round; }
+  .moira-leg { fill: none; stroke: #1b2430; stroke-linecap: round; }
+  .moira-shape { stroke: #1b2430; stroke-width: 1.6; }
+  .moira-ring { fill: none; stroke-width: 3; }
+  .moira-orthocenter { fill: #ccbb44; fill-opacity: 0.45; }
+  .moira-name { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; text-anchor: middle; fill: #1b2430; }
+  .moira-legend-box { fill: #ffffff; fill-opacity: 0.92; stroke: #dddddd; }
+  .moira-legend-title { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 11px; fill: #6b7280; }
+  .moira-legend-label { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; fill: #1b2430; }
+  .moira-legend-end { text-anchor: end; }
+  .moira-legend-swatch, .moira-legend-ramp { stroke: #dddddd; }
+</style>
+<rect class="moira-paper" x="-135" y="-144" width="270" height="271"/>
+<g class="moira-bonds">
+  <path class="moira-bond" d="M-84 88C-58 88,-70 88,-44 88" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-20 88C6 88,-6 88,20 88" stroke-width="2.51"/>
+  <path class="moira-bond" d="M44 88C70 88,58 88,84 88" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-85 0C-59 0,-69 0,-43 0" stroke-width="2.07"/>
+  <path class="moira-bond" d="M-21 0C5 0,-5 0,21 0" stroke-width="2.07"/>
+  <path class="moira-bond" d="M43 0C69 0,59 0,85 0" stroke-width="2.07"/>
+  <path class="moira-bond" d="M-84 -88C-58 -88,-70 -88,-44 -88" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-20 -88C6 -88,-6 -88,20 -88" stroke-width="2.51"/>
+  <path class="moira-bond" d="M44 -88C70 -88,58 -88,84 -88" stroke-width="2.51"/>
+  <path class="moira-bond" d="M-96 76C-96 50,-96 37,-96 11" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-96 -11C-96 -37,-96 -50,-96 -76" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-32 76C-32 50,-32 37,-32 11" stroke-width="1.2"/>
+  <path class="moira-bond" d="M-32 -11C-32 -37,-32 -50,-32 -76" stroke-width="1.2"/>
+  <path class="moira-bond" d="M32 76C32 50,32 37,32 11" stroke-width="1.2"/>
+  <path class="moira-bond" d="M32 -11C32 -37,32 -50,32 -76" stroke-width="1.2"/>
+  <path class="moira-bond" d="M96 76C96 50,96 37,96 11" stroke-width="1.2"/>
+  <path class="moira-bond" d="M96 -11C96 -37,96 -50,96 -76" stroke-width="1.2"/>
+</g>
+<g class="moira-rings">
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-96 88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-32 88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(32 88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(96 88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-96 -88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-32 -88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(32 -88) scale(1.17)" stroke="#66ccee"/>
+  <path class="moira-ring" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(96 -88) scale(1.17)" stroke="#66ccee"/>
+</g>
+<g class="moira-shapes">
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-96 88)" fill="#4477aa"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-32 88)" fill="#4477aa"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(32 88)" fill="#4477aa"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(96 88)" fill="#4477aa"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-96 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(-32 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(32 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-square" d="M-11 -11H11V11H-11Z" transform="translate(96 0)" fill="#ccbb44"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-96 -88)" fill="#228833"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(-32 -88)" fill="#228833"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(32 -88)" fill="#228833"/>
+  <path class="moira-shape shape-circle" d="M-12 0A12 12 0 1 0 12 0A12 12 0 1 0 -12 0Z" transform="translate(96 -88)" fill="#228833"/>
+</g>
+<g class="moira-names">
+  <text class="moira-name" x="-96" y="68">A1</text>
+  <text class="moira-name" x="-32" y="68">A2</text>
+  <text class="moira-name" x="32" y="68">A3</text>
+  <text class="moira-name" x="96" y="68">A4</text>
+  <text class="moira-name" x="-96" y="-20">W1</text>
+  <text class="moira-name" x="-32" y="-20">W2</text>
+  <text class="moira-name" x="32" y="-20">W3</text>
+  <text class="moira-name" x="96" y="-20">W4</text>
+  <text class="moira-name" x="-96" y="-108">A1†</text>
+  <text class="moira-name" x="-32" y="-108">A2†</text>
+  <text class="moira-name" x="32" y="-108">A3†</text>
+  <text class="moira-name" x="96" y="-108">A4†</text>
+</g>
+<g class="moira-legend" transform="translate(-111 -120)">
+  <rect class="moira-legend-box" x="-9" y="-9" width="144" height="102" rx="4"/>
+  <text class="moira-legend-title" x="0" y="10">tag</text>
+  <rect class="moira-legend-swatch" x="0" y="22" width="11" height="11" rx="2" fill="#228833"/>
+  <text class="moira-legend-label" x="17" y="31.5">bra</text>
+  <rect class="moira-legend-swatch" x="0" y="40" width="11" height="11" rx="2" fill="#4477aa"/>
+  <text class="moira-legend-label" x="17" y="49.5">ket</text>
+  <rect class="moira-legend-swatch" x="0" y="58" width="11" height="11" rx="2" fill="#ccbb44"/>
+  <text class="moira-legend-label" x="17" y="67.5">mpo</text>
+  <rect class="moira-legend-swatch" x="0" y="76" width="11" height="11" rx="2" fill="#66ccee"/>
+  <text class="moira-legend-label" x="17" y="85.5">mps</text>
+</g>
+</svg>"
+`;
