@@ -39,6 +39,10 @@ Não-objetivos — recusar explicitamente se surgirem no meio do caminho:
 
 - Não-linearidades, bolhas, transformers, camadas de rede neural.
 - Execução numérica, simulação, DMRG embutido.
+- Notação de circuito quântico propriamente dita: bolinha de controle com fio
+  vertical, caixa atravessando vários fios, símbolo de medida, registrador
+  clássico. Circuito **como rede tensorial** entra (§16); a convenção gráfica de
+  circuito é outra linguagem, e quem a quer quer o `quantikz`.
 - Backend, contas de usuário, sincronização em nuvem, telemetria.
 - Edição colaborativa em tempo real.
 
@@ -406,6 +410,9 @@ para não ser descoberto durante o marco.
 **M5 — lançamento.** Tutorial, deploy no Cloudflare Pages, README creditando
 Penrose pela notação e as referências de escopo.
 
+**M6 — circuitos.** Biblioteca de portas e gerador de circuito em tijolo (§16).
+Entra depois da segunda parte do M4; não é pré-requisito do lançamento.
+
 Os cinco dialetos são executados por `scripts/verifica-codigo.ts` e imprimem o
 escalar sem edição — inclusive o `ncon` de MATLAB, no Octave, com o `ncon.m`
 canônico dos autores da convenção.
@@ -487,3 +494,96 @@ não o dialeto. Não roda no CI; precisa ter rodado antes do M5.
 Comentários só onde a matemática não é óbvia (busca de ordem, geometria das
 pernas). Commits pequenos e atômicos. Nenhuma dependência nova sem uma linha no
 README justificando por que a alternativa manual não serve.
+
+## 16. Circuitos quânticos como redes tensoriais
+
+Um circuito quântico **é** uma rede tensorial: porta de um qubit é tensor de duas
+pernas, porta de dois qubits é de quatro, o fio do qubit é a perna, o tempo corre
+da esquerda para a direita. O custo de simular o circuito é o custo de contrair a
+rede, que o painel do §9 já calcula. É a demonstração mais convincente desse
+painel: em circuito, a explosão do intermediário é o assunto, e não um detalhe.
+
+O que **não** entra está no §2 e deve ser dito numa linha na própria seção da
+interface: aqui um CNOT é um tensor de quatro pernas, que é a representação que
+interessa quando o assunto é contração e custo.
+
+### 16.1 Biblioteca de portas
+
+Tabela de dados em `src/lib/gates/`, não código novo: nome, número de pernas,
+ângulos, forma, tags e rótulos de perna.
+
+| porta | pernas | forma |
+|---|---|---|
+| H, X, Y, Z, S, T | 2 | quadrado |
+| Rz(θ), Rx(θ), Ry(θ) | 2 | quadrado, com θ no inspetor |
+| CNOT | 4 | quadrado, **assimétrica** |
+| CZ, SWAP | 4 | quadrado, simétricas |
+
+**Os rótulos de perna são o ponto central.** Um tensor de quatro pernas chamado
+`CNOT` não diz qual perna é controle e qual é alvo, e conectar trocado deixa a
+rede válida com o número errado — o mesmo erro silencioso da transposição
+indevida entre dois vínculos de dimensões iguais. Portas de dois qubits nascem
+com `c_in`, `c_out`, `t_in`, `t_out`; as de um qubit com `in` e `out`.
+`Leg.label` já existe, e a regra do §8.1 — rótulo do usuário vence a letra
+automática — faz a fórmula e os quatro geradores de código carregarem esses
+nomes sem alteração alguma. Tags: `porta` mais o nome em minúsculas.
+
+**Dados de exemplo são conhecidos, não aleatórios.** A matriz de uma porta é
+constante, ao contrário do tensor de uma MPS. O bloco de exemplo do código
+gerado emite os valores reais — `H = [[1,1],[1,-1]]/√2`, CNOT como tensor
+2×2×2×2 — para que um circuito colado num notebook calcule a amplitude certa e
+não um número plausível. Consequência: para uma rede só de portas, os dialetos
+passam a concordar no valor, e o aviso de "os valores não se comparam entre
+dialetos" tem de deixar de sair nesse caso.
+
+**Validação.** Aviso, não erro, quando `c_in` for ligado a `c_in` ou `in` a `in`:
+entrada com entrada é quase sempre engano. O aviso registra que CNOT é
+assimétrica — girar as pernas muda o significado —, enquanto em CZ e SWAP não
+muda. O teste casa por convenção de rótulo, e não por identidade de porta, para
+alcançar também a rede rotulada à mão.
+
+### 16.2 Gerador de circuito em tijolo
+
+**Um gerador, não quatro.** Caminho quântico, QAOA, Trotter e circuito aleatório
+são a mesma estrutura com parâmetros diferentes: qubits, profundidade, padrão
+(tijolo, com pares alternando entre camadas pares e ímpares, ou escada, com pares
+deslizando um a um), a porta de dois qubits da camada, a porta de um qubit
+intercalada — que é o que faz a moeda de Hadamard de um caminho quântico —,
+contorno aberto ou periódico, e estados `|0⟩` iniciais opcionais.
+
+E o sanduíche de circuito `⟨0|U†OU|0⟩`, que fecha em escalar e é o que se contrai
+para calcular valor esperado. Reaproveita o gerador de sanduíche existente.
+
+### 16.3 Busca e realce por tag
+
+Campo que aceita uma tag e realça no canvas todos os tensores que a têm, com a
+contagem ao lado. Vive no painel geral, não na seção de circuitos: serve
+igualmente a "realce todos os `cnot`" e a "realce a camada 3" numa MERA. É
+separável do resto do §16 e pode entrar antes.
+
+### 16.4 Testes
+
+Além dos estruturais que os outros geradores têm — nenhuma perna usada duas
+vezes, nenhum vínculo órfão, uma componente conexa:
+
+- **Unitariedade**, na camada A do §14.1: contrair uma porta com a própria
+  conjugada transposta dá identidade. Barato, e pega erro de ordem de eixo na
+  tabela.
+- **Amplitude conhecida**: circuito de Bell (`H` seguido de `CNOT`), ou um
+  caminho quântico de poucos passos, com a amplitude conferida contra o valor
+  analítico. É o teste que prova que os rótulos de perna estão ligando o que
+  devem.
+
+### 16.5 O que isto exige do modelo
+
+O §16 quase não toca o modelo — mas não é "nada". `Rz(θ)` precisa guardar θ, e
+não há campo para isso: hoje ele só caberia dentro de `Tensor.name`, de onde a
+geração de código o extrairia por expressão regular. É a terceira dívida da mesma
+classe das duas do §5, e entra junto com elas: `params?: Record<string, number>`,
+aditivo e opcional, sem subir a versão de esquema.
+
+Segundo ponto: para emitir a matriz real de uma porta, o gerador de código
+precisa reconhecer que aquele tensor é uma porta, e o único caminho hoje é a tag
+`porta`. Isso torna a tag semanticamente carregada, quando o §7 a define como
+base da coloração. Ou se aceita isso explicitamente, ou o reconhecimento passa
+pelo mesmo campo `params`. A decisão fica registrada como aberta.
